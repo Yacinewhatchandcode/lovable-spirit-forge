@@ -52,10 +52,6 @@ export const SpiritualHero = () => {
       <div className="relative z-10 text-center max-w-6xl mx-auto">
         {/* Main title */}
         <div className="mb-8">
-          <h1 className="text-5xl md:text-7xl font-bold mb-6">
-            <span className="text-gradient-divine">LOVABLE</span>
-          </h1>
-          
           <div className="h-16 flex items-center justify-center">
             <h2 className="text-2xl md:text-4xl font-script text-divine-gold animate-shimmer">
               {phrases[currentPhrase]}
