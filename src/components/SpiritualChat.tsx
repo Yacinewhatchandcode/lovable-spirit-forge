@@ -5,6 +5,7 @@ import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Mic, Send, Sparkles, Heart } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { supabase } from '@/integrations/supabase/client';
 
 interface Message {
   id: string;
@@ -61,23 +62,60 @@ export const SpiritualChat = () => {
     };
 
     setMessages(prev => [...prev, userMessage]);
+    const messageText = inputValue;
     setInputValue('');
     setIsLoading(true);
 
-    // Simulate AI response with spiritual guidance
-    setTimeout(() => {
+    try {
+      // Call OpenRouter via Supabase Edge Function
+      const { data, error } = await supabase.functions.invoke('chat-with-openrouter', {
+        body: { message: messageText }
+      });
+
+      if (error) {
+        console.error('Supabase function error:', error);
+        throw new Error(error.message);
+      }
+
+      if (data?.error) {
+        console.error('OpenRouter API error:', data.error);
+        throw new Error(data.error);
+      }
+
+      const aiMessage: Message = {
+        id: (Date.now() + 1).toString(),
+        text: data.response || "I apologize, but I cannot provide a response at this moment. Please try again.",
+        isUser: false,
+        timestamp: new Date(),
+        hasQuote: Math.random() > 0.7
+      };
+
+      setMessages(prev => [...prev, aiMessage]);
+
+      toast({
+        description: "Spiritual guidance received ✨",
+      });
+    } catch (error) {
+      console.error('Error sending message:', error);
+
+      // Fallback to local response if API fails
       const responseText = spiritualResponses[Math.floor(Math.random() * spiritualResponses.length)];
       const aiMessage: Message = {
         id: (Date.now() + 1).toString(),
         text: responseText,
         isUser: false,
         timestamp: new Date(),
-        hasQuote: Math.random() > 0.7, // 30% chance of including a quote
+        hasQuote: Math.random() > 0.7
       };
 
       setMessages(prev => [...prev, aiMessage]);
+
+      toast({
+        description: "Using offline guidance mode",
+      });
+    } finally {
       setIsLoading(false);
-    }, 1500);
+    }
   };
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
