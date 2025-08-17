@@ -84,8 +84,8 @@ export const SpiritualQuote = () => {
             />
           </svg>
           
-          <blockquote className="text-xl md:text-2xl leading-relaxed text-gradient-divine font-medium relative z-10">
-            "{currentQuote.text}"
+          <blockquote className="font-script text-divine-gold text-3xl md:text-4xl lg:text-5xl leading-snug tracking-wide relative z-10">
+            “{currentQuote.text}”
           </blockquote>
         </div>
 
