@@ -61,6 +61,21 @@ export default {
 					'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
+				},
+				// Spiritual Design Tokens
+				'divine-gold': {
+					DEFAULT: 'hsl(var(--divine-gold))',
+					light: 'hsl(var(--divine-gold-light))',
+					dark: 'hsl(var(--divine-gold-dark))'
+				},
+				'sacred-blue': {
+					DEFAULT: 'hsl(var(--sacred-blue))',
+					light: 'hsl(var(--sacred-blue-light))',
+					dark: 'hsl(var(--sacred-blue-dark))'
+				},
+				'mystical-purple': {
+					DEFAULT: 'hsl(var(--mystical-purple))',
+					light: 'hsl(var(--mystical-purple-light))'
 				}
 			},
 			borderRadius: {

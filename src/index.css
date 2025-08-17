@@ -1,42 +1,72 @@
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Great+Vibes&family=Inter:wght@300;400;500;600;700&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
-All colors MUST be HSL.
-*/
+/* Bahá'í-Inspired Spiritual AI Design System */
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    /* Core Spiritual Palette */
+    --background: 220 20% 6%;
+    --foreground: 45 15% 85%;
 
-    --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    --card: 220 15% 8%;
+    --card-foreground: 45 15% 85%;
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
+    --popover: 220 15% 8%;
+    --popover-foreground: 45 15% 85%;
 
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
+    /* Sacred Deep Blue & Divine Gold */
+    --primary: 220 25% 12%;
+    --primary-foreground: 45 25% 88%;
 
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
+    --secondary: 220 15% 15%;
+    --secondary-foreground: 45 20% 82%;
 
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+    --muted: 220 10% 20%;
+    --muted-foreground: 45 10% 65%;
 
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+    --accent: 45 35% 55%;
+    --accent-foreground: 220 25% 12%;
 
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive: 0 62% 50%;
+    --destructive-foreground: 45 15% 85%;
 
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
+    --border: 220 15% 18%;
+    --input: 220 15% 15%;
+    --ring: 45 35% 55%;
 
-    --radius: 0.5rem;
+    /* Divine Gold Variations */
+    --divine-gold: 45 35% 55%;
+    --divine-gold-light: 45 40% 65%;
+    --divine-gold-dark: 45 30% 45%;
+
+    /* Sacred Blue Variations */
+    --sacred-blue: 220 25% 12%;
+    --sacred-blue-light: 220 20% 18%;
+    --sacred-blue-dark: 220 30% 8%;
+
+    /* Mystical Purples */
+    --mystical-purple: 260 30% 25%;
+    --mystical-purple-light: 260 25% 35%;
+
+    /* Spiritual Gradients */
+    --gradient-divine: linear-gradient(135deg, hsl(var(--sacred-blue)) 0%, hsl(var(--mystical-purple)) 50%, hsl(var(--divine-gold)) 100%);
+    --gradient-celestial: linear-gradient(45deg, hsl(var(--sacred-blue-dark)) 0%, hsl(var(--sacred-blue)) 100%);
+    --gradient-enlightenment: radial-gradient(ellipse at center, hsl(var(--divine-gold) / 0.1) 0%, transparent 70%);
+
+    /* Sacred Shadows */
+    --shadow-divine: 0 10px 40px hsl(var(--divine-gold) / 0.2);
+    --shadow-mystical: 0 5px 20px hsl(var(--mystical-purple) / 0.3);
+    --shadow-sacred: 0 15px 50px hsl(var(--sacred-blue) / 0.4);
+
+    /* Spiritual Animations */
+    --transition-divine: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-sacred: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+
+    --radius: 1rem;
 
     --sidebar-background: 0 0% 98%;
 
@@ -100,6 +130,103 @@ All colors MUST be HSL.
   }
 
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground font-serif;
+    font-family: 'Cormorant Garamond', serif;
+    overflow-x: hidden;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Cormorant Garamond', serif;
+  }
+
+  .font-script {
+    font-family: 'Great Vibes', cursive;
+  }
+
+  .font-sans {
+    font-family: 'Inter', sans-serif;
+  }
+}
+
+@layer components {
+  /* Spiritual Animations */
+  @keyframes float {
+    0%, 100% { transform: translateY(0px) rotate(0deg); }
+    25% { transform: translateY(-10px) rotate(1deg); }
+    50% { transform: translateY(-5px) rotate(-1deg); }
+    75% { transform: translateY(-15px) rotate(0.5deg); }
+  }
+
+  @keyframes shimmer {
+    0% { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
+  }
+
+  @keyframes particle-drift {
+    0% { transform: translate(0, 0) scale(0.8) rotate(0deg); opacity: 0; }
+    20% { opacity: 1; }
+    80% { opacity: 1; }
+    100% { transform: translate(100px, -100px) scale(1.2) rotate(180deg); opacity: 0; }
+  }
+
+  @keyframes divine-pulse {
+    0%, 100% { box-shadow: 0 0 20px hsl(var(--divine-gold) / 0.3); }
+    50% { box-shadow: 0 0 40px hsl(var(--divine-gold) / 0.6), 0 0 60px hsl(var(--divine-gold) / 0.4); }
+  }
+
+  @keyframes calligraphy-draw {
+    from { stroke-dashoffset: 100%; }
+    to { stroke-dashoffset: 0%; }
+  }
+
+  /* Utility Classes */
+  .animate-float {
+    animation: float 6s ease-in-out infinite;
+  }
+
+  .animate-shimmer {
+    background: linear-gradient(90deg, transparent, hsl(var(--divine-gold) / 0.3), transparent);
+    background-size: 200% 100%;
+    animation: shimmer 3s infinite;
+  }
+
+  .animate-particle {
+    animation: particle-drift 8s ease-out infinite;
+  }
+
+  .animate-divine-pulse {
+    animation: divine-pulse 4s ease-in-out infinite;
+  }
+
+  .bg-starfield {
+    background: 
+      radial-gradient(2px 2px at 20px 30px, hsl(var(--divine-gold) / 0.3), transparent),
+      radial-gradient(2px 2px at 40px 70px, hsl(var(--divine-gold) / 0.2), transparent),
+      radial-gradient(1px 1px at 90px 40px, hsl(var(--divine-gold) / 0.4), transparent),
+      radial-gradient(1px 1px at 130px 80px, hsl(var(--divine-gold) / 0.2), transparent),
+      radial-gradient(2px 2px at 160px 30px, hsl(var(--divine-gold) / 0.3), transparent),
+      hsl(var(--background));
+    background-size: 200px 100px;
+    animation: float 20s linear infinite;
+  }
+
+  .text-gradient-divine {
+    background: var(--gradient-divine);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-size: 200% 200%;
+    animation: shimmer 4s ease-in-out infinite;
+  }
+
+  .border-divine {
+    border: 2px solid hsl(var(--divine-gold) / 0.3);
+    box-shadow: 0 0 20px hsl(var(--divine-gold) / 0.2);
+  }
+
+  .glass-morphism {
+    background: hsl(var(--card) / 0.8);
+    backdrop-filter: blur(20px);
+    border: 1px solid hsl(var(--divine-gold) / 0.2);
   }
 }
