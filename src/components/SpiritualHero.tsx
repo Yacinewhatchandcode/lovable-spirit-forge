@@ -15,7 +15,7 @@ export const SpiritualHero = () => {
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentPhrase(prev => (prev + 1) % phrases.length);
-    }, 3000);
+    }, 8000); // Much slower rotation
 
     return () => clearInterval(interval);
   }, []);
@@ -69,7 +69,7 @@ export const SpiritualHero = () => {
         <div className="flex flex-col sm:flex-row gap-4 justify-center mb-16">
           <Button 
             size="lg"
-            className="bg-divine-gold text-sacred-blue hover:bg-divine-gold/90 transition-all duration-300 text-lg px-8 py-6 animate-divine-pulse"
+            className="bg-divine-gold text-sacred-blue hover:bg-divine-gold/90 transition-all duration-300 text-lg px-8 py-6"
           >
             Begin Spiritual Journey
           </Button>

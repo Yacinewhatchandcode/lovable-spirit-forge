@@ -31,20 +31,20 @@ export const ParticleField = () => {
     resizeCanvas();
     window.addEventListener('resize', resizeCanvas);
 
-    // Initialize particles
+    // Initialize subtle particles
     const createParticle = (): Particle => ({
       x: Math.random() * canvas.width,
       y: Math.random() * canvas.height,
-      vx: (Math.random() - 0.5) * 0.5,
-      vy: (Math.random() - 0.5) * 0.5,
-      size: Math.random() * 2 + 0.5,
-      opacity: Math.random() * 0.6 + 0.2,
+      vx: (Math.random() - 0.5) * 0.1, // Much slower movement
+      vy: (Math.random() - 0.5) * 0.1,
+      size: Math.random() * 1 + 0.3, // Smaller particles
+      opacity: Math.random() * 0.3 + 0.1, // More subtle
       life: 0,
-      maxLife: Math.random() * 200 + 100,
+      maxLife: Math.random() * 400 + 200, // Longer lifespan
     });
 
-    // Create initial particles
-    for (let i = 0; i < 50; i++) {
+    // Create fewer particles for subtlety
+    for (let i = 0; i < 25; i++) {
       particlesRef.current.push(createParticle());
     }
 
@@ -58,9 +58,9 @@ export const ParticleField = () => {
         particle.y += particle.vy;
         particle.life++;
 
-        // Calculate opacity based on life cycle
+        // Calculate subtle opacity based on life cycle
         const lifeRatio = particle.life / particle.maxLife;
-        particle.opacity = Math.sin(lifeRatio * Math.PI) * 0.6;
+        particle.opacity = Math.sin(lifeRatio * Math.PI) * 0.2; // Much more subtle
 
         // Draw particle
         ctx.save();
