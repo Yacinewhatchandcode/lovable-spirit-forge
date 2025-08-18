@@ -14,7 +14,36 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      hidden_words: {
+        Row: {
+          addressee: string
+          created_at: string
+          id: string
+          number: number
+          part: string
+          section_title: string | null
+          text: string
+        }
+        Insert: {
+          addressee: string
+          created_at?: string
+          id?: string
+          number: number
+          part: string
+          section_title?: string | null
+          text: string
+        }
+        Update: {
+          addressee?: string
+          created_at?: string
+          id?: string
+          number?: number
+          part?: string
+          section_title?: string | null
+          text?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
