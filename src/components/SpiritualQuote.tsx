@@ -1,59 +1,65 @@
 import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
+import { supabase } from '@/integrations/supabase/client';
 
-interface Quote {
+interface HiddenWord {
+  id: string;
+  number: number;
+  part: string;
+  addressee: string;
   text: string;
-  source: string;
-  theme: string;
+  section_title: string;
 }
 
-const spiritualQuotes: Quote[] = [
-  {
-    text: "The best beloved of all things in My sight is Justice; turn not away therefrom if thou desirest Me, and neglect it not that I may confide in thee.",
-    source: "Bahá'u'lláh - The Hidden Words",
-    theme: "justice"
-  },
-  {
-    text: "O Son of Spirit! My first counsel is this: Possess a pure, kindly and radiant heart, that thine may be a sovereignty ancient, imperishable and everlasting.",
-    source: "Bahá'u'lláh - The Hidden Words",
-    theme: "heart"
-  },
-  {
-    text: "Be generous in prosperity, and thankful in adversity. Be worthy of the trust of thy neighbor, and look upon him with a bright and friendly face.",
-    source: "Bahá'u'lláh - Gleanings",
-    theme: "character"
-  },
-  {
-    text: "The earth is but one country, and mankind its citizens.",
-    source: "Bahá'u'lláh - Gleanings",
-    theme: "unity"
-  },
-  {
-    text: "Let your vision be world-embracing, rather than confined to your own self.",
-    source: "Bahá'u'lláh - Tablets",
-    theme: "vision"
-  }
-];
-
 export const SpiritualQuote = () => {
-  const [currentQuote, setCurrentQuote] = useState<Quote>(spiritualQuotes[0]);
+  const [currentQuote, setCurrentQuote] = useState<HiddenWord | null>(null);
   const [isVisible, setIsVisible] = useState(true);
+  const [allQuotes, setAllQuotes] = useState<HiddenWord[]>([]);
+
+  const fetchQuotes = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('hidden_words')
+        .select('*')
+        .order('part, number');
+      
+      if (error) throw error;
+      
+      if (data && data.length > 0) {
+        setAllQuotes(data);
+        if (!currentQuote) {
+          const randomIndex = Math.floor(Math.random() * data.length);
+          setCurrentQuote(data[randomIndex]);
+        }
+      }
+    } catch (error) {
+      console.error('Error fetching Hidden Words:', error);
+    }
+  };
 
   const getRandomQuote = () => {
-    const randomIndex = Math.floor(Math.random() * spiritualQuotes.length);
-    return spiritualQuotes[randomIndex];
+    if (allQuotes.length > 0) {
+      const randomIndex = Math.floor(Math.random() * allQuotes.length);
+      return allQuotes[randomIndex];
+    }
+    return null;
   };
 
   const handleNewQuote = () => {
-    setIsVisible(false);
-    setTimeout(() => {
-      setCurrentQuote(getRandomQuote());
-      setIsVisible(true);
-    }, 300);
+    const newQuote = getRandomQuote();
+    if (newQuote) {
+      setIsVisible(false);
+      setTimeout(() => {
+        setCurrentQuote(newQuote);
+        setIsVisible(true);
+      }, 300);
+    }
   };
 
   useEffect(() => {
+    fetchQuotes();
+    
     const interval = setInterval(() => {
       handleNewQuote();
     }, 15000); // Change quote every 15 seconds
@@ -85,20 +91,20 @@ export const SpiritualQuote = () => {
           </svg>
           
           <blockquote className="font-script text-divine-gold text-3xl md:text-4xl lg:text-5xl leading-snug tracking-wide relative z-10">
-            “{currentQuote.text}”
+            “{currentQuote?.text}”
           </blockquote>
         </div>
 
         {/* Source attribution */}
         <div className="space-y-2">
           <p className="text-divine-gold font-script text-lg">
-            — {currentQuote.source}
+            — {currentQuote?.addressee}
           </p>
           
           {/* Theme indicator */}
           <div className="inline-flex items-center px-3 py-1 rounded-full bg-sacred-blue/30 border border-divine-gold/20">
             <span className="text-sm text-divine-gold/80 capitalize">
-              {currentQuote.theme}
+              {currentQuote?.part === 'arabic' ? 'Arabic' : 'Persian'} #{currentQuote?.number} - {currentQuote?.section_title}
             </span>
           </div>
         </div>

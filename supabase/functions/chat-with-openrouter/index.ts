@@ -36,7 +36,7 @@ serve(async (req) => {
         'X-Title': 'Spiritual Chat App',
       },
       body: JSON.stringify({
-        model: 'meta-llama/llama-3.1-8b-instruct:free',
+        model: 'deepseek/deepseek-chat-v3-0324:free',
         messages: [
           {
             role: 'system',

@@ -15,13 +15,27 @@ interface Message {
   hasQuote?: boolean;
 }
 
-const spiritualResponses = [
-  "Let me reflect on your words with the wisdom of the ages. How may the light of understanding illuminate your path?",
-  "Your question touches the heart of spiritual seeking. Consider this: every soul's journey is unique, yet we all walk toward the same divine light.",
-  "In the sacred writings, we find guidance for such moments. Perhaps what you seek lies not in answers, but in the questions themselves.",
-  "The path of spiritual growth is often through reflection and prayer. What does your heart tell you in this moment of quietude?",
-  "Like a lamp that burns brightest in the darkest night, wisdom often emerges from our deepest contemplations.",
-];
+// Function to get random Hidden Word as fallback
+const getRandomHiddenWord = async () => {
+  try {
+    const { data, error } = await supabase
+      .from('hidden_words')
+      .select('*');
+    
+    if (error) throw error;
+    
+    if (data && data.length > 0) {
+      const randomIndex = Math.floor(Math.random() * data.length);
+      const hiddenWord = data[randomIndex];
+      return `${hiddenWord.addressee} ${hiddenWord.text} — From The Hidden Words of Bahá'u'lláh (${hiddenWord.part === 'arabic' ? 'Arabic' : 'Persian'} #${hiddenWord.number})`;
+    }
+  } catch (error) {
+    console.error('Error fetching Hidden Word:', error);
+  }
+  
+  // Ultimate fallback
+  return "My first counsel is this: Possess a pure, kindly and radiant heart, that thine may be a sovereignty ancient, imperishable and everlasting. — O SON OF SPIRIT! (The Hidden Words of Bahá'u'lláh)";
+};
 
 export const SpiritualChat = () => {
   const [messages, setMessages] = useState<Message[]>([
@@ -98,14 +112,14 @@ export const SpiritualChat = () => {
     } catch (error) {
       console.error('Error sending message:', error);
 
-      // Fallback to local response if API fails
-      const responseText = spiritualResponses[Math.floor(Math.random() * spiritualResponses.length)];
+      // Fallback to authentic Hidden Word if API fails
+      const responseText = await getRandomHiddenWord();
       const aiMessage: Message = {
         id: (Date.now() + 1).toString(),
         text: responseText,
         isUser: false,
         timestamp: new Date(),
-        hasQuote: Math.random() > 0.7
+        hasQuote: true
       };
 
       setMessages(prev => [...prev, aiMessage]);
