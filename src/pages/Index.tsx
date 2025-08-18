@@ -1,5 +1,4 @@
 import { SpiritualHero } from '@/components/SpiritualHero';
-import { SpiritualQuote } from '@/components/SpiritualQuote';
 import { SpiritualChat } from '@/components/SpiritualChat';
 import { ParticleField } from '@/components/ParticleField';
 
@@ -15,18 +14,6 @@ const Index = () => {
           <SpiritualHero />
         </section>
 
-        {/* Spiritual Quote Section */}
-        <section className="py-16 px-6">
-          <div className="max-w-4xl mx-auto text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-gradient-divine mb-4">
-              Sacred Wisdom
-            </h2>
-            <p className="text-lg text-muted-foreground">
-              Receive inspiration from the timeless teachings of Bahá'u'lláh
-            </p>
-          </div>
-          <SpiritualQuote />
-        </section>
 
         {/* Spiritual Chat Interface */}
         <section className="py-16 px-6">
@@ -54,7 +41,7 @@ const Index = () => {
               </svg>
             </div>
             
-            <p className="text-divine-gold font-script text-xl mb-4">
+            <p className="text-divine-gold text-xl mb-4">
               "The earth is but one country, and mankind its citizens."
             </p>
             
