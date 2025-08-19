@@ -8,58 +8,58 @@
 
 @layer base {
   :root {
-    /* Core color palette - classic light theme */
-    --background: 45 15% 96%;
+    /* Core color palette - high contrast light theme */
+    --background: 0 0% 100%;
     --foreground: 220 13% 18%;
     
-    --muted: 223 47% 11%;
-    --muted-foreground: 215.4 16.3% 56.9%;
+    --muted: 210 40% 96%;
+    --muted-foreground: 215.4 16.3% 46.9%;
     
-    --popover: 224 71% 4%;
-    --popover-foreground: 215 20.2% 65.1%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 220 13% 18%;
     
-    --card: 224 71% 4%;
-    --card-foreground: 213 31% 91%;
+    --card: 0 0% 100%;
+    --card-foreground: 220 13% 18%;
     
-    --border: 216 34% 17%;
-    --input: 216 34% 17%;
+    --border: 220 13% 91%;
+    --input: 220 13% 91%;
     
-    --primary: 210 40% 98%;
-    --primary-foreground: 222.2 47.4% 1.2%;
+    --primary: 220 14% 96%;
+    --primary-foreground: 220 9% 46%;
     
-    --secondary: 222.2 84% 4.9%;
-    --secondary-foreground: 210 40% 98%;
+    --secondary: 210 40% 98%;
+    --secondary-foreground: 222.2 47.4% 11.2%;
     
-    --accent: 216 34% 17%;
-    --accent-foreground: 210 40% 98%;
+    --accent: 210 40% 96%;
+    --accent-foreground: 222.2 47.4% 11.2%;
     
     --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive-foreground: 0 0% 100%;
     
-    --ring: 216 34% 17%;
+    --ring: 220 14% 96%;
     
-    --radius: 0.5rem;
+    --radius: 0.75rem;
     
-    /* Classic Quest Theme Colors */
-    --wisdom-amber: 35 85% 65%;
-    --wisdom-amber-light: 38 90% 70%;
-    --wisdom-amber-dark: 32 80% 58%;
+    /* Enhanced Quest Theme Colors - Better Contrast */
+    --wisdom-amber: 35 85% 55%;
+    --wisdom-amber-light: 38 90% 65%;
+    --wisdom-amber-dark: 32 80% 45%;
     
-    --quest-slate: 215 25% 27%;
-    --quest-slate-light: 215 20% 40%;
-    --quest-slate-dark: 215 30% 15%;
+    --quest-slate: 215 25% 35%;
+    --quest-slate-light: 215 20% 55%;
+    --quest-slate-dark: 215 30% 25%;
     
-    --insight-blue: 210 75% 45%;
-    --insight-blue-light: 210 70% 55%;
+    --insight-blue: 210 75% 50%;
+    --insight-blue-light: 210 70% 65%;
     
-    /* Subtle gradients */
-    --gradient-wisdom: linear-gradient(135deg, hsl(var(--wisdom-amber)), hsl(var(--quest-slate)));
-    --gradient-quest: linear-gradient(180deg, hsl(var(--quest-slate-light)), hsl(var(--quest-slate-dark)));
-    --gradient-insight: linear-gradient(45deg, hsl(var(--wisdom-amber-light)), hsl(var(--insight-blue-light)));
+    /* Light gradients for better visibility */
+    --gradient-wisdom: linear-gradient(135deg, hsl(var(--wisdom-amber)), hsl(0 0% 100%));
+    --gradient-quest: linear-gradient(180deg, hsl(0 0% 98%), hsl(220 14% 96%));
+    --gradient-insight: linear-gradient(45deg, hsl(var(--wisdom-amber-light)), hsl(0 0% 100%));
     
-    /* Refined shadows */
-    --shadow-wisdom: 0 8px 25px -8px hsl(var(--wisdom-amber) / 0.25);
-    --shadow-quest: 0 4px 15px -4px hsl(var(--quest-slate) / 0.3);
+    /* Enhanced shadows for depth */
+    --shadow-wisdom: 0 10px 30px -10px hsl(var(--wisdom-amber) / 0.3);
+    --shadow-quest: 0 8px 25px -8px hsl(var(--quest-slate) / 0.15);
     --shadow-insight: 0 6px 20px -6px hsl(var(--insight-blue) / 0.2);
     
     /* Smooth transitions */

@@ -165,18 +165,18 @@ export const SpiritualChat = () => {
   };
 
   return (
-    <Card className="glass-morphism border-wisdom h-[600px] flex flex-col">
+    <Card className="bg-white/95 backdrop-blur-sm border-2 border-wisdom-amber/30 shadow-wisdom h-[600px] flex flex-col">
       {/* Header */}
-      <div className="p-6 border-b border-wisdom-amber/20">
+      <div className="p-6 border-b-2 border-wisdom-amber/20 bg-gradient-to-r from-wisdom-amber/5 to-wisdom-amber/10">
         <div className="flex items-center space-x-3">
-          <div className="w-10 h-10 rounded-full bg-gradient-wisdom flex items-center justify-center animate-wisdom-pulse">
-            <Sparkles className="w-5 h-5 text-quest-slate" />
+          <div className="w-12 h-12 rounded-full bg-wisdom-amber/20 backdrop-blur-sm flex items-center justify-center animate-wisdom-pulse border-2 border-wisdom-amber/40">
+            <Sparkles className="w-6 h-6 text-wisdom-amber-dark" />
           </div>
           <div>
-            <h2 className="text-xl font-semibold text-gradient-wisdom">
+            <h2 className="text-xl font-semibold text-wisdom-amber-dark">
               Wisdom Companion
             </h2>
-            <p className="text-sm text-muted-foreground">
+            <p className="text-sm text-quest-slate">
               Ancient wisdom for modern seekers
             </p>
           </div>
@@ -192,10 +192,10 @@ export const SpiritualChat = () => {
               className={`flex ${message.isUser ? 'justify-end' : 'justify-start'}`}
             >
               <div
-                className={`max-w-[80%] p-4 rounded-lg transition-all duration-300 ${
+                className={`max-w-[80%] p-4 rounded-lg transition-all duration-300 shadow-sm ${
                   message.isUser
-                    ? 'bg-wisdom-amber/20 text-wisdom-amber border border-wisdom-amber/30'
-                    : 'bg-quest-slate/30 text-foreground border border-quest-slate-light/30'
+                    ? 'bg-wisdom-amber/15 text-wisdom-amber-dark border-2 border-wisdom-amber/40 ml-4'
+                    : 'bg-white/80 backdrop-blur-sm text-quest-slate-dark border-2 border-quest-slate/20 mr-4'
                 }`}
               >
                 <p className="text-sm leading-relaxed">
@@ -216,8 +216,9 @@ export const SpiritualChat = () => {
           
           {isLoading && (
             <div className="flex justify-start">
-              <div className="bg-quest-slate/30 text-foreground border border-quest-slate-light/30 p-4 rounded-lg">
-                <div className="flex space-x-2">
+              <div className="bg-white/90 backdrop-blur-sm text-quest-slate-dark border-2 border-quest-slate/20 p-4 rounded-lg mr-4 shadow-sm">
+                <div className="flex space-x-2 items-center">
+                  <span className="text-sm text-quest-slate mr-2">Thinking...</span>
                   <div className="w-2 h-2 bg-wisdom-amber rounded-full animate-bounce"></div>
                   <div className="w-2 h-2 bg-wisdom-amber rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
                   <div className="w-2 h-2 bg-wisdom-amber rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
@@ -229,22 +230,22 @@ export const SpiritualChat = () => {
       </ScrollArea>
 
       {/* Input */}
-      <div className="p-6 border-t border-wisdom-amber/20">
+      <div className="p-6 border-t-2 border-wisdom-amber/20 bg-gradient-to-r from-wisdom-amber/5 to-transparent">
         <div className="flex space-x-3">
           <Input
             value={inputValue}
             onChange={(e) => setInputValue(e.target.value)}
             onKeyPress={handleKeyPress}
             placeholder="Share your thoughts and seek wisdom..."
-            className="flex-1 bg-quest-slate/20 border-wisdom-amber/30 text-foreground placeholder:text-muted-foreground focus:border-wisdom-amber/50"
+            className="flex-1 bg-white/90 backdrop-blur-sm border-2 border-wisdom-amber/40 text-quest-slate-dark placeholder:text-quest-slate/60 focus:border-wisdom-amber focus:ring-2 focus:ring-wisdom-amber/20"
           />
           
           <Button
             onClick={handleVoiceInput}
             variant="outline"
             size="icon"
-            className={`border-wisdom-amber/30 text-wisdom-amber hover:bg-wisdom-amber/10 transition-all duration-300 ${
-              isListening ? 'animate-pulse bg-wisdom-amber/20' : ''
+            className={`border-2 border-wisdom-amber/50 text-wisdom-amber-dark hover:bg-wisdom-amber/20 transition-all duration-300 bg-white/80 backdrop-blur-sm ${
+              isListening ? 'animate-pulse bg-wisdom-amber/30' : ''
             }`}
           >
             <Mic className="w-4 h-4" />
@@ -253,7 +254,7 @@ export const SpiritualChat = () => {
           <Button
             onClick={handleSendMessage}
             disabled={!inputValue.trim() || isLoading}
-            className="bg-wisdom-amber text-quest-slate hover:bg-wisdom-amber/90 transition-all duration-300"
+            className="bg-wisdom-amber text-white hover:bg-wisdom-amber-dark transition-all duration-300 shadow-wisdom border-0 font-medium"
           >
             <Send className="w-4 h-4" />
           </Button>
