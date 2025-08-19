@@ -165,18 +165,18 @@ export const SpiritualChat = () => {
   };
 
   return (
-    <Card className="bg-white/95 backdrop-blur-sm border-2 border-wisdom-amber/30 shadow-wisdom h-[600px] flex flex-col">
+    <Card className="bg-white border border-border shadow-lg h-[600px] md:h-[700px] flex flex-col max-w-4xl mx-auto">
       {/* Header */}
-      <div className="p-6 border-b-2 border-wisdom-amber/20 bg-gradient-to-r from-wisdom-amber/5 to-wisdom-amber/10">
+      <div className="p-4 md:p-6 border-b border-border bg-white">
         <div className="flex items-center space-x-3">
-          <div className="w-12 h-12 rounded-full bg-wisdom-amber/20 backdrop-blur-sm flex items-center justify-center animate-wisdom-pulse border-2 border-wisdom-amber/40">
-            <Sparkles className="w-6 h-6 text-wisdom-amber-dark" />
+          <div className="w-10 h-10 md:w-12 md:h-12 rounded-full bg-primary/10 flex items-center justify-center">
+            <Sparkles className="w-5 h-5 md:w-6 md:h-6 text-primary" />
           </div>
           <div>
-            <h2 className="text-xl font-semibold text-wisdom-amber-dark">
+            <h2 className="text-lg md:text-xl font-semibold text-foreground">
               Wisdom Companion
             </h2>
-            <p className="text-sm text-quest-slate">
+            <p className="text-xs md:text-sm text-muted-foreground">
               Ancient wisdom for modern seekers
             </p>
           </div>
@@ -184,30 +184,30 @@ export const SpiritualChat = () => {
       </div>
 
       {/* Messages */}
-      <ScrollArea ref={scrollAreaRef} className="flex-1 p-6">
-        <div className="space-y-4">
+      <ScrollArea ref={scrollAreaRef} className="flex-1 p-4 md:p-6">
+        <div className="space-y-3 md:space-y-4">
           {messages.map((message) => (
             <div
               key={message.id}
               className={`flex ${message.isUser ? 'justify-end' : 'justify-start'}`}
             >
               <div
-                className={`max-w-[80%] p-4 rounded-lg transition-all duration-300 shadow-sm ${
+                className={`max-w-[85%] md:max-w-[75%] p-3 md:p-4 rounded-2xl transition-all duration-200 ${
                   message.isUser
-                    ? 'bg-wisdom-amber/15 text-wisdom-amber-dark border-2 border-wisdom-amber/40 ml-4'
-                    : 'bg-white/80 backdrop-blur-sm text-quest-slate-dark border-2 border-quest-slate/20 mr-4'
+                    ? 'bg-primary text-primary-foreground'
+                    : 'bg-muted text-muted-foreground border border-border'
                 }`}
               >
-                <p className="text-sm leading-relaxed">
+                <p className="text-sm md:text-base leading-relaxed">
                   {message.text}
                 </p>
                 
                 <div className="flex items-center justify-between mt-2">
-                  <span className="text-xs text-muted-foreground">
+                  <span className="text-xs opacity-70">
                     {message.timestamp.toLocaleTimeString()}
                   </span>
                   {!message.isUser && (
-                    <Heart className="w-3 h-3 text-wisdom-amber/60" />
+                    <Heart className="w-3 h-3 opacity-50" />
                   )}
                 </div>
               </div>
@@ -216,12 +216,12 @@ export const SpiritualChat = () => {
           
           {isLoading && (
             <div className="flex justify-start">
-              <div className="bg-white/90 backdrop-blur-sm text-quest-slate-dark border-2 border-quest-slate/20 p-4 rounded-lg mr-4 shadow-sm">
+              <div className="bg-muted text-muted-foreground p-3 md:p-4 rounded-2xl border border-border">
                 <div className="flex space-x-2 items-center">
-                  <span className="text-sm text-quest-slate mr-2">Thinking...</span>
-                  <div className="w-2 h-2 bg-wisdom-amber rounded-full animate-bounce"></div>
-                  <div className="w-2 h-2 bg-wisdom-amber rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
-                  <div className="w-2 h-2 bg-wisdom-amber rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
+                  <span className="text-sm mr-2">Thinking...</span>
+                  <div className="w-2 h-2 bg-primary rounded-full animate-bounce"></div>
+                  <div className="w-2 h-2 bg-primary rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
+                  <div className="w-2 h-2 bg-primary rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
                 </div>
               </div>
             </div>
@@ -230,34 +230,53 @@ export const SpiritualChat = () => {
       </ScrollArea>
 
       {/* Input */}
-      <div className="p-6 border-t-2 border-wisdom-amber/20 bg-gradient-to-r from-wisdom-amber/5 to-transparent">
-        <div className="flex space-x-3">
-          <Input
-            value={inputValue}
-            onChange={(e) => setInputValue(e.target.value)}
-            onKeyPress={handleKeyPress}
-            placeholder="Share your thoughts and seek wisdom..."
-            className="flex-1 bg-white/90 backdrop-blur-sm border-2 border-wisdom-amber/40 text-quest-slate-dark placeholder:text-quest-slate/60 focus:border-wisdom-amber focus:ring-2 focus:ring-wisdom-amber/20"
-          />
-          
-          <Button
-            onClick={handleVoiceInput}
-            variant="outline"
-            size="icon"
-            className={`border-2 border-wisdom-amber/50 text-wisdom-amber-dark hover:bg-wisdom-amber/20 transition-all duration-300 bg-white/80 backdrop-blur-sm ${
-              isListening ? 'animate-pulse bg-wisdom-amber/30' : ''
-            }`}
-          >
-            <Mic className="w-4 h-4" />
-          </Button>
-          
-          <Button
-            onClick={handleSendMessage}
-            disabled={!inputValue.trim() || isLoading}
-            className="bg-wisdom-amber text-white hover:bg-wisdom-amber-dark transition-all duration-300 shadow-wisdom border-0 font-medium"
-          >
-            <Send className="w-4 h-4" />
-          </Button>
+      <div className="p-4 md:p-6 border-t border-border bg-white">
+        <div className="flex flex-col space-y-3 md:space-y-0 md:flex-row md:space-x-3">
+          {/* Voice button - separate row on mobile */}
+          <div className="md:hidden flex justify-center">
+            <Button
+              onClick={handleVoiceInput}
+              variant="outline"
+              size="sm"
+              className={`border border-border text-muted-foreground hover:bg-accent transition-all duration-200 ${
+                isListening ? 'animate-pulse bg-accent' : ''
+              }`}
+            >
+              <Mic className="w-4 h-4 mr-2" />
+              Voice Input
+            </Button>
+          </div>
+
+          {/* Main input row */}
+          <div className="flex space-x-2 md:space-x-3 flex-1">
+            <Input
+              value={inputValue}
+              onChange={(e) => setInputValue(e.target.value)}
+              onKeyPress={handleKeyPress}
+              placeholder="Share your thoughts and seek wisdom..."
+              className="flex-1 bg-input border border-border text-foreground placeholder:text-muted-foreground focus:border-ring focus:ring-1 focus:ring-ring rounded-full px-4 py-2 md:py-3"
+            />
+            
+            {/* Voice button - inline on desktop */}
+            <Button
+              onClick={handleVoiceInput}
+              variant="ghost"
+              size="icon"
+              className={`hidden md:flex border-0 text-muted-foreground hover:bg-accent hover:text-foreground transition-all duration-200 ${
+                isListening ? 'animate-pulse bg-accent' : ''
+              }`}
+            >
+              <Mic className="w-4 h-4" />
+            </Button>
+            
+            <Button
+              onClick={handleSendMessage}
+              disabled={!inputValue.trim() || isLoading}
+              className="bg-primary text-primary-foreground hover:bg-primary/90 transition-all duration-200 rounded-full px-4 md:px-6 font-medium"
+            >
+              <Send className="w-4 h-4" />
+            </Button>
+          </div>
         </div>
       </div>
     </Card>
