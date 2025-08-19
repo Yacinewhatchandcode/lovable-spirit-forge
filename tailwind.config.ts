@@ -62,20 +62,20 @@ export default {
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
 				},
-				// Spiritual Design Tokens
-				'divine-gold': {
-					DEFAULT: 'hsl(var(--divine-gold))',
-					light: 'hsl(var(--divine-gold-light))',
-					dark: 'hsl(var(--divine-gold-dark))'
+				// Classic Quest Design Tokens
+				'wisdom-amber': {
+					DEFAULT: 'hsl(var(--wisdom-amber))',
+					light: 'hsl(var(--wisdom-amber-light))',
+					dark: 'hsl(var(--wisdom-amber-dark))'
 				},
-				'sacred-blue': {
-					DEFAULT: 'hsl(var(--sacred-blue))',
-					light: 'hsl(var(--sacred-blue-light))',
-					dark: 'hsl(var(--sacred-blue-dark))'
+				'quest-slate': {
+					DEFAULT: 'hsl(var(--quest-slate))',
+					light: 'hsl(var(--quest-slate-light))',
+					dark: 'hsl(var(--quest-slate-dark))'
 				},
-				'mystical-purple': {
-					DEFAULT: 'hsl(var(--mystical-purple))',
-					light: 'hsl(var(--mystical-purple-light))'
+				'insight-blue': {
+					DEFAULT: 'hsl(var(--insight-blue))',
+					light: 'hsl(var(--insight-blue-light))'
 				}
 			},
 			borderRadius: {

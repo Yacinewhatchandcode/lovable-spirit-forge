@@ -15,8 +15,8 @@ interface Message {
   hasQuote?: boolean;
 }
 
-// Function to get random Hidden Word as fallback
-const getRandomHiddenWord = async () => {
+// Function to get random wisdom quote as fallback
+const getRandomWisdomQuote = async () => {
   try {
     const { data, error } = await supabase
       .from('hidden_words')
@@ -26,22 +26,22 @@ const getRandomHiddenWord = async () => {
     
     if (data && data.length > 0) {
       const randomIndex = Math.floor(Math.random() * data.length);
-      const hiddenWord = data[randomIndex];
-      return `${hiddenWord.addressee} ${hiddenWord.text} — From The Hidden Words of Bahá'u'lláh (${hiddenWord.part === 'arabic' ? 'Arabic' : 'Persian'} #${hiddenWord.number})`;
+      const wisdomText = data[randomIndex];
+      return `"${wisdomText.text}" — Ancient Wisdom`;
     }
   } catch (error) {
-    console.error('Error fetching Hidden Word:', error);
+    console.error('Error fetching wisdom:', error);
   }
   
   // Ultimate fallback
-  return "My first counsel is this: Possess a pure, kindly and radiant heart, that thine may be a sovereignty ancient, imperishable and everlasting. — O SON OF SPIRIT! (The Hidden Words of Bahá'u'lláh)";
+  return "The journey inward requires courage, patience, and an open heart. Trust in the process of your own unfolding.";
 };
 
 export const SpiritualChat = () => {
   const [messages, setMessages] = useState<Message[]>([
     {
       id: '1',
-      text: "Peace be upon you, dear seeker. I am here to offer gentle guidance through the wisdom of the Bahá'í Faith. How may I assist you on your spiritual journey today?",
+      text: "Welcome, fellow seeker. I am here to offer gentle guidance drawing from timeless spiritual wisdom. How may I assist you on your journey of inner discovery today?",
       isUser: false,
       timestamp: new Date(),
     }
@@ -112,8 +112,8 @@ export const SpiritualChat = () => {
     } catch (error) {
       console.error('Error sending message:', error);
 
-      // Fallback to authentic Hidden Word if API fails
-      const responseText = await getRandomHiddenWord();
+      // Fallback to wisdom quote if API fails
+      const responseText = await getRandomWisdomQuote();
       const aiMessage: Message = {
         id: (Date.now() + 1).toString(),
         text: responseText,
@@ -165,19 +165,19 @@ export const SpiritualChat = () => {
   };
 
   return (
-    <Card className="glass-morphism border-divine h-[600px] flex flex-col">
+    <Card className="glass-morphism border-wisdom h-[600px] flex flex-col">
       {/* Header */}
-      <div className="p-6 border-b border-divine-gold/20">
+      <div className="p-6 border-b border-wisdom-amber/20">
         <div className="flex items-center space-x-3">
-          <div className="w-10 h-10 rounded-full bg-gradient-divine flex items-center justify-center animate-divine-pulse">
-            <Sparkles className="w-5 h-5 text-sacred-blue" />
+          <div className="w-10 h-10 rounded-full bg-gradient-wisdom flex items-center justify-center animate-wisdom-pulse">
+            <Sparkles className="w-5 h-5 text-quest-slate" />
           </div>
           <div>
-            <h2 className="text-xl font-semibold text-gradient-divine">
-              Spiritual Guidance
+            <h2 className="text-xl font-semibold text-gradient-wisdom">
+              Wisdom Companion
             </h2>
             <p className="text-sm text-muted-foreground">
-              Wisdom from the Bahá'í Faith
+              Ancient wisdom for modern seekers
             </p>
           </div>
         </div>
@@ -194,28 +194,20 @@ export const SpiritualChat = () => {
               <div
                 className={`max-w-[80%] p-4 rounded-lg transition-all duration-300 ${
                   message.isUser
-                    ? 'bg-divine-gold/20 text-divine-gold border border-divine-gold/30'
-                    : 'bg-sacred-blue/30 text-foreground border border-sacred-blue-light/30'
+                    ? 'bg-wisdom-amber/20 text-wisdom-amber border border-wisdom-amber/30'
+                    : 'bg-quest-slate/30 text-foreground border border-quest-slate-light/30'
                 }`}
               >
                 <p className="text-sm leading-relaxed">
                   {message.text}
                 </p>
                 
-                {message.hasQuote && !message.isUser && (
-                  <div className="mt-3 pt-3 border-t border-divine-gold/20">
-                    <p className="text-xs italic text-divine-gold/80 font-script">
-                      "Be generous in prosperity, and thankful in adversity..."
-                    </p>
-                  </div>
-                )}
-                
                 <div className="flex items-center justify-between mt-2">
                   <span className="text-xs text-muted-foreground">
                     {message.timestamp.toLocaleTimeString()}
                   </span>
                   {!message.isUser && (
-                    <Heart className="w-3 h-3 text-divine-gold/60" />
+                    <Heart className="w-3 h-3 text-wisdom-amber/60" />
                   )}
                 </div>
               </div>
@@ -224,11 +216,11 @@ export const SpiritualChat = () => {
           
           {isLoading && (
             <div className="flex justify-start">
-              <div className="bg-sacred-blue/30 text-foreground border border-sacred-blue-light/30 p-4 rounded-lg">
+              <div className="bg-quest-slate/30 text-foreground border border-quest-slate-light/30 p-4 rounded-lg">
                 <div className="flex space-x-2">
-                  <div className="w-2 h-2 bg-divine-gold rounded-full animate-bounce"></div>
-                  <div className="w-2 h-2 bg-divine-gold rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
-                  <div className="w-2 h-2 bg-divine-gold rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
+                  <div className="w-2 h-2 bg-wisdom-amber rounded-full animate-bounce"></div>
+                  <div className="w-2 h-2 bg-wisdom-amber rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
+                  <div className="w-2 h-2 bg-wisdom-amber rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
                 </div>
               </div>
             </div>
@@ -237,22 +229,22 @@ export const SpiritualChat = () => {
       </ScrollArea>
 
       {/* Input */}
-      <div className="p-6 border-t border-divine-gold/20">
+      <div className="p-6 border-t border-wisdom-amber/20">
         <div className="flex space-x-3">
           <Input
             value={inputValue}
             onChange={(e) => setInputValue(e.target.value)}
             onKeyPress={handleKeyPress}
-            placeholder="Ask for spiritual guidance..."
-            className="flex-1 bg-sacred-blue/20 border-divine-gold/30 text-foreground placeholder:text-muted-foreground focus:border-divine-gold/50"
+            placeholder="Share your thoughts and seek wisdom..."
+            className="flex-1 bg-quest-slate/20 border-wisdom-amber/30 text-foreground placeholder:text-muted-foreground focus:border-wisdom-amber/50"
           />
           
           <Button
             onClick={handleVoiceInput}
             variant="outline"
             size="icon"
-            className={`border-divine-gold/30 text-divine-gold hover:bg-divine-gold/10 transition-all duration-300 ${
-              isListening ? 'animate-pulse bg-divine-gold/20' : ''
+            className={`border-wisdom-amber/30 text-wisdom-amber hover:bg-wisdom-amber/10 transition-all duration-300 ${
+              isListening ? 'animate-pulse bg-wisdom-amber/20' : ''
             }`}
           >
             <Mic className="w-4 h-4" />
@@ -261,7 +253,7 @@ export const SpiritualChat = () => {
           <Button
             onClick={handleSendMessage}
             disabled={!inputValue.trim() || isLoading}
-            className="bg-divine-gold text-sacred-blue hover:bg-divine-gold/90 transition-all duration-300"
+            className="bg-wisdom-amber text-quest-slate hover:bg-wisdom-amber/90 transition-all duration-300"
           >
             <Send className="w-4 h-4" />
           </Button>

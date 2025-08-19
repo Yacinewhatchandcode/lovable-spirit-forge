@@ -4,85 +4,77 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Bahá'í-Inspired Spiritual AI Design System */
+/* Classic Quest Wisdom Design System */
 
 @layer base {
   :root {
-    /* Core Spiritual Palette */
-    --background: 220 20% 6%;
-    --foreground: 45 15% 85%;
-
-    --card: 220 15% 8%;
-    --card-foreground: 45 15% 85%;
-
-    --popover: 220 15% 8%;
-    --popover-foreground: 45 15% 85%;
-
-    /* Sacred Deep Blue & Divine Gold */
-    --primary: 220 25% 12%;
-    --primary-foreground: 45 25% 88%;
-
-    --secondary: 220 15% 15%;
-    --secondary-foreground: 45 20% 82%;
-
-    --muted: 220 10% 20%;
-    --muted-foreground: 45 10% 65%;
-
-    --accent: 45 35% 55%;
-    --accent-foreground: 220 25% 12%;
-
-    --destructive: 0 62% 50%;
-    --destructive-foreground: 45 15% 85%;
-
-    --border: 220 15% 18%;
-    --input: 220 15% 15%;
-    --ring: 45 35% 55%;
-
-    /* Divine Gold Variations */
-    --divine-gold: 45 35% 55%;
-    --divine-gold-light: 45 40% 65%;
-    --divine-gold-dark: 45 30% 45%;
-
-    /* Sacred Blue Variations */
-    --sacred-blue: 220 25% 12%;
-    --sacred-blue-light: 220 20% 18%;
-    --sacred-blue-dark: 220 30% 8%;
-
-    /* Mystical Purples */
-    --mystical-purple: 260 30% 25%;
-    --mystical-purple-light: 260 25% 35%;
-
-    /* Spiritual Gradients */
-    --gradient-divine: linear-gradient(135deg, hsl(var(--sacred-blue)) 0%, hsl(var(--mystical-purple)) 50%, hsl(var(--divine-gold)) 100%);
-    --gradient-celestial: linear-gradient(45deg, hsl(var(--sacred-blue-dark)) 0%, hsl(var(--sacred-blue)) 100%);
-    --gradient-enlightenment: radial-gradient(ellipse at center, hsl(var(--divine-gold) / 0.1) 0%, transparent 70%);
-
-    /* Sacred Shadows */
-    --shadow-divine: 0 10px 40px hsl(var(--divine-gold) / 0.2);
-    --shadow-mystical: 0 5px 20px hsl(var(--mystical-purple) / 0.3);
-    --shadow-sacred: 0 15px 50px hsl(var(--sacred-blue) / 0.4);
-
-    /* Spiritual Animations */
-    --transition-divine: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-    --transition-sacred: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-
-    --radius: 1rem;
-
-    --sidebar-background: 0 0% 98%;
-
-    --sidebar-foreground: 240 5.3% 26.1%;
-
-    --sidebar-primary: 240 5.9% 10%;
-
-    --sidebar-primary-foreground: 0 0% 98%;
-
-    --sidebar-accent: 240 4.8% 95.9%;
-
-    --sidebar-accent-foreground: 240 5.9% 10%;
-
-    --sidebar-border: 220 13% 91%;
-
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    /* Core color palette - light mode */
+    --background: 220 23% 4%;
+    --foreground: 213 31% 91%;
+    
+    --muted: 223 47% 11%;
+    --muted-foreground: 215.4 16.3% 56.9%;
+    
+    --popover: 224 71% 4%;
+    --popover-foreground: 215 20.2% 65.1%;
+    
+    --card: 224 71% 4%;
+    --card-foreground: 213 31% 91%;
+    
+    --border: 216 34% 17%;
+    --input: 216 34% 17%;
+    
+    --primary: 210 40% 98%;
+    --primary-foreground: 222.2 47.4% 1.2%;
+    
+    --secondary: 222.2 84% 4.9%;
+    --secondary-foreground: 210 40% 98%;
+    
+    --accent: 216 34% 17%;
+    --accent-foreground: 210 40% 98%;
+    
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+    
+    --ring: 216 34% 17%;
+    
+    --radius: 0.5rem;
+    
+    /* Classic Quest Theme Colors */
+    --wisdom-amber: 35 85% 65%;
+    --wisdom-amber-light: 38 90% 70%;
+    --wisdom-amber-dark: 32 80% 58%;
+    
+    --quest-slate: 215 25% 27%;
+    --quest-slate-light: 215 20% 40%;
+    --quest-slate-dark: 215 30% 15%;
+    
+    --insight-blue: 210 75% 45%;
+    --insight-blue-light: 210 70% 55%;
+    
+    /* Subtle gradients */
+    --gradient-wisdom: linear-gradient(135deg, hsl(var(--wisdom-amber)), hsl(var(--quest-slate)));
+    --gradient-quest: linear-gradient(180deg, hsl(var(--quest-slate-light)), hsl(var(--quest-slate-dark)));
+    --gradient-insight: linear-gradient(45deg, hsl(var(--wisdom-amber-light)), hsl(var(--insight-blue-light)));
+    
+    /* Refined shadows */
+    --shadow-wisdom: 0 8px 25px -8px hsl(var(--wisdom-amber) / 0.25);
+    --shadow-quest: 0 4px 15px -4px hsl(var(--quest-slate) / 0.3);
+    --shadow-insight: 0 6px 20px -6px hsl(var(--insight-blue) / 0.2);
+    
+    /* Smooth transitions */
+    --transition-wisdom: all 0.3s ease-in-out;
+    --transition-quest: all 0.4s ease-out;
+    
+    /* Sidebar colors */
+    --sidebar-background: 222.2 84% 4.9%;
+    --sidebar-foreground: 210 40% 98%;
+    --sidebar-primary: 210 40% 98%;
+    --sidebar-primary-foreground: 222.2 47.4% 11.2%;
+    --sidebar-accent: 216 34% 17%;
+    --sidebar-accent-foreground: 210 40% 98%;
+    --sidebar-border: 216 34% 17%;
+    --sidebar-ring: 216 34% 17%;
   }
 
   .dark {
@@ -149,82 +141,75 @@
 }
 
 @layer components {
-  /* Subtle Animations */
-  @keyframes float {
+  /* Classic quest utilities */
+  @keyframes gentle-float {
     0%, 100% { transform: translateY(0px); }
-    50% { transform: translateY(-5px); }
+    50% { transform: translateY(-6px); }
   }
 
-  @keyframes shimmer {
-    0% { background-position: -200% 0; opacity: 0.3; }
-    50% { opacity: 0.5; }
-    100% { background-position: 200% 0; opacity: 0.3; }
+  @keyframes subtle-glow {
+    0% { background-position: -200% center; }
+    100% { background-position: 200% center; }
   }
 
-  @keyframes particle-drift {
-    0% { transform: translate(0, 0) scale(0.9); opacity: 0; }
-    50% { opacity: 0.5; }
-    100% { transform: translate(50px, -50px) scale(1.1); opacity: 0; }
+  @keyframes wisdom-pulse {
+    0%, 100% { 
+      transform: scale(1);
+      opacity: 0.8;
+    }
+    50% { 
+      transform: scale(1.02);
+      opacity: 1;
+    }
   }
 
-  @keyframes divine-pulse {
-    0%, 100% { box-shadow: 0 0 10px hsl(var(--divine-gold) / 0.2); }
-    50% { box-shadow: 0 0 20px hsl(var(--divine-gold) / 0.3); }
+  .animate-gentle-float {
+    animation: gentle-float 8s ease-in-out infinite;
   }
 
-  @keyframes calligraphy-draw {
-    from { stroke-dashoffset: 100%; }
-    to { stroke-dashoffset: 0%; }
-  }
-
-  /* Subtle Utility Classes */
-  .animate-float {
-    animation: float 12s ease-in-out infinite;
-  }
-
-  .animate-shimmer {
-    background: linear-gradient(90deg, transparent, hsl(var(--divine-gold) / 0.2), transparent);
+  .animate-subtle-glow {
+    background: linear-gradient(90deg, 
+      hsl(var(--wisdom-amber)) 0%, 
+      hsl(var(--wisdom-amber-light)) 50%, 
+      hsl(var(--wisdom-amber)) 100%
+    );
     background-size: 200% 100%;
-    animation: shimmer 6s infinite;
+    animation: subtle-glow 4s ease-in-out infinite;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
   }
 
-  .animate-particle {
-    animation: particle-drift 16s ease-out infinite;
-  }
-
-  .animate-divine-pulse {
-    animation: divine-pulse 8s ease-in-out infinite;
+  .animate-wisdom-pulse {
+    animation: wisdom-pulse 3s ease-in-out infinite;
   }
 
   .bg-starfield {
-    background: 
-      radial-gradient(2px 2px at 20px 30px, hsl(var(--divine-gold) / 0.3), transparent),
-      radial-gradient(2px 2px at 40px 70px, hsl(var(--divine-gold) / 0.2), transparent),
-      radial-gradient(1px 1px at 90px 40px, hsl(var(--divine-gold) / 0.4), transparent),
-      radial-gradient(1px 1px at 130px 80px, hsl(var(--divine-gold) / 0.2), transparent),
-      radial-gradient(2px 2px at 160px 30px, hsl(var(--divine-gold) / 0.3), transparent),
-      hsl(var(--background));
+    background-image: 
+      radial-gradient(1px 1px at 20px 30px, hsl(var(--wisdom-amber) / 0.4), transparent),
+      radial-gradient(1px 1px at 40px 70px, hsl(var(--quest-slate-light) / 0.3), transparent),
+      radial-gradient(1px 1px at 90px 40px, hsl(var(--wisdom-amber-light) / 0.5), transparent),
+      radial-gradient(1px 1px at 130px 80px, hsl(var(--insight-blue) / 0.3), transparent),
+      radial-gradient(1px 1px at 160px 30px, hsl(var(--quest-slate) / 0.2), transparent);
+    background-repeat: repeat;
     background-size: 200px 100px;
-    animation: float 20s linear infinite;
   }
 
-  .text-gradient-divine {
-    background: var(--gradient-divine);
-    background-clip: text;
+  .text-gradient-wisdom {
+    background: linear-gradient(135deg, hsl(var(--wisdom-amber)), hsl(var(--quest-slate-light)));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-    background-size: 200% 200%;
-    animation: shimmer 4s ease-in-out infinite;
+    background-clip: text;
   }
 
-  .border-divine {
-    border: 2px solid hsl(var(--divine-gold) / 0.3);
-    box-shadow: 0 0 20px hsl(var(--divine-gold) / 0.2);
+  .border-wisdom {
+    border: 1px solid hsl(var(--wisdom-amber) / 0.3);
+    box-shadow: inset 0 0 15px hsl(var(--wisdom-amber) / 0.1);
   }
 
   .glass-morphism {
-    background: hsl(var(--card) / 0.8);
-    backdrop-filter: blur(20px);
-    border: 1px solid hsl(var(--divine-gold) / 0.2);
+    background: rgba(255, 255, 255, 0.03);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
   }
 }

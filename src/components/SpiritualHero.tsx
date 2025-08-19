@@ -6,10 +6,10 @@ export const SpiritualHero = () => {
   const [currentPhrase, setCurrentPhrase] = useState(0);
   
   const phrases = [
-    "Wisdom of the Ages",
-    "Unity in Diversity", 
-    "Spiritual Guidance",
-    "Universal Love"
+    "Begin Your Quest",
+    "Discover Wisdom", 
+    "Inner Journey",
+    "Timeless Truth"
   ];
 
   useEffect(() => {
@@ -23,23 +23,23 @@ export const SpiritualHero = () => {
   const features = [
     {
       icon: Sparkles,
-      title: "Spiritual Wisdom",
-      description: "Access to sacred texts and gentle guidance from Bahá'í teachings"
+      title: "Ancient Wisdom",
+      description: "Access timeless teachings and gentle guidance for your spiritual journey"
     },
     {
       icon: Heart, 
-      title: "Voice Interaction",
-      description: "Speak naturally and receive compassionate responses in real-time"
+      title: "Personal Guidance",
+      description: "Receive thoughtful responses tailored to your unique spiritual path"
     },
     {
       icon: Users,
-      title: "Universal Unity",
-      description: "Embrace the oneness of humanity through inclusive spiritual practice"
+      title: "Universal Principles",
+      description: "Explore fundamental truths that unite humanity across all traditions"
     },
     {
       icon: Globe,
-      title: "Global Community",
-      description: "Connect with seekers worldwide on the path of spiritual growth"
+      title: "Seeking Community",
+      description: "Connect with fellow seekers on the path of inner discovery"
     }
   ];
 
@@ -53,15 +53,15 @@ export const SpiritualHero = () => {
         {/* Main title */}
         <div className="mb-8">
           <div className="h-16 flex items-center justify-center">
-            <h2 className="text-2xl md:text-4xl font-semibold text-divine-gold animate-shimmer">
+            <h2 className="text-2xl md:text-4xl font-semibold text-wisdom-amber animate-subtle-glow">
               {phrases[currentPhrase]}
             </h2>
           </div>
           
           <p className="text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed mt-6">
-            An advanced AI system that bridges spiritual wisdom with cutting-edge technology, 
-            offering guidance through the sacred teachings of the Bahá'í Faith with 
-            real-time voice interaction and beautiful spiritual experiences.
+            A thoughtful AI companion that draws from spiritual wisdom traditions, 
+            offering gentle guidance and insights for seekers on their personal journey 
+            of inner discovery and growth.
           </p>
         </div>
 
@@ -69,15 +69,15 @@ export const SpiritualHero = () => {
         <div className="flex flex-col sm:flex-row gap-4 justify-center mb-16">
           <Button 
             size="lg"
-            className="bg-divine-gold text-sacred-blue hover:bg-divine-gold/90 transition-all duration-300 text-lg px-8 py-6"
+            className="bg-wisdom-amber text-quest-slate hover:bg-wisdom-amber/90 transition-all duration-300 text-lg px-8 py-6"
           >
-            Begin Spiritual Journey
+            Begin Your Quest
           </Button>
           
           <Button 
             variant="outline" 
             size="lg"
-            className="border-divine-gold/30 text-divine-gold hover:bg-divine-gold/10 transition-all duration-300 text-lg px-8 py-6"
+            className="border-wisdom-amber/30 text-wisdom-amber hover:bg-wisdom-amber/10 transition-all duration-300 text-lg px-8 py-6"
           >
             Explore Wisdom
           </Button>
@@ -88,14 +88,14 @@ export const SpiritualHero = () => {
           {features.map((feature, index) => (
             <div 
               key={index}
-              className="glass-morphism border-divine p-6 rounded-xl hover:scale-105 transition-all duration-500 animate-float"
-              style={{ animationDelay: `${index * 0.2}s` }}
+              className="glass-morphism border-wisdom p-6 rounded-lg hover:scale-102 transition-all duration-300 animate-gentle-float"
+              style={{ animationDelay: `${index * 0.3}s` }}
             >
-              <div className="w-12 h-12 mx-auto mb-4 rounded-full bg-gradient-divine flex items-center justify-center">
-                <feature.icon className="w-6 h-6 text-sacred-blue" />
+              <div className="w-12 h-12 mx-auto mb-4 rounded-full bg-gradient-wisdom flex items-center justify-center">
+                <feature.icon className="w-6 h-6 text-quest-slate" />
               </div>
               
-              <h3 className="text-lg font-semibold text-divine-gold mb-2">
+              <h3 className="text-lg font-semibold text-wisdom-amber mb-2">
                 {feature.title}
               </h3>
               
@@ -106,20 +106,17 @@ export const SpiritualHero = () => {
           ))}
         </div>
 
-        {/* Sacred geometry decoration */}
-        <div className="absolute top-1/4 left-1/4 w-32 h-32 opacity-20 animate-float">
+        {/* Minimal geometric accents */}
+        <div className="absolute top-1/3 left-1/6 w-16 h-16 opacity-15 animate-gentle-float">
           <svg viewBox="0 0 100 100" className="w-full h-full">
-            <circle cx="50" cy="50" r="45" fill="none" stroke="hsl(var(--divine-gold))" strokeWidth="1" opacity="0.6"/>
-            <circle cx="50" cy="50" r="30" fill="none" stroke="hsl(var(--divine-gold))" strokeWidth="1" opacity="0.4"/>
-            <circle cx="50" cy="50" r="15" fill="none" stroke="hsl(var(--divine-gold))" strokeWidth="1" opacity="0.8"/>
-            <path d="M50 5 L95 50 L50 95 L5 50 Z" fill="none" stroke="hsl(var(--divine-gold))" strokeWidth="1" opacity="0.3"/>
+            <circle cx="50" cy="50" r="40" fill="none" stroke="hsl(var(--wisdom-amber))" strokeWidth="1" opacity="0.4"/>
+            <circle cx="50" cy="50" r="20" fill="none" stroke="hsl(var(--wisdom-amber))" strokeWidth="1" opacity="0.6"/>
           </svg>
         </div>
 
-        <div className="absolute top-3/4 right-1/4 w-24 h-24 opacity-20 animate-float" style={{ animationDelay: '2s' }}>
+        <div className="absolute top-2/3 right-1/6 w-12 h-12 opacity-15 animate-gentle-float" style={{ animationDelay: '3s' }}>
           <svg viewBox="0 0 100 100" className="w-full h-full">
-            <polygon points="50,10 90,90 10,90" fill="none" stroke="hsl(var(--divine-gold))" strokeWidth="1" opacity="0.5"/>
-            <circle cx="50" cy="50" r="25" fill="none" stroke="hsl(var(--divine-gold))" strokeWidth="1" opacity="0.7"/>
+            <rect x="25" y="25" width="50" height="50" fill="none" stroke="hsl(var(--wisdom-amber))" strokeWidth="1" opacity="0.5"/>
           </svg>
         </div>
       </div>

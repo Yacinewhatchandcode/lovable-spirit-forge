@@ -15,14 +15,14 @@ const Index = () => {
         </section>
 
 
-        {/* Spiritual Chat Interface */}
+        {/* Wisdom Chat Interface */}
         <section className="py-16 px-6">
           <div className="max-w-4xl mx-auto text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-gradient-divine mb-4">
-              Spiritual Guidance
+            <h2 className="text-3xl md:text-4xl font-bold text-gradient-wisdom mb-4">
+              Wisdom Companion
             </h2>
             <p className="text-lg text-muted-foreground">
-              Engage in meaningful conversation with our AI spiritual guide
+              Engage in thoughtful dialogue with your AI wisdom guide
             </p>
           </div>
           <div className="max-w-4xl mx-auto">
@@ -30,23 +30,22 @@ const Index = () => {
           </div>
         </section>
 
-        {/* Footer with sacred geometry */}
-        <footer className="py-16 px-6 border-t border-divine-gold/20">
+        {/* Footer with simple geometry */}
+        <footer className="py-16 px-6 border-t border-wisdom-amber/20">
           <div className="max-w-4xl mx-auto text-center">
             <div className="mb-8">
-              <svg className="w-16 h-16 mx-auto mb-4 opacity-60" viewBox="0 0 100 100">
-                <circle cx="50" cy="50" r="40" fill="none" stroke="hsl(var(--divine-gold))" strokeWidth="2"/>
-                <path d="M30 30 L70 70 M70 30 L30 70" stroke="hsl(var(--divine-gold))" strokeWidth="1"/>
-                <circle cx="50" cy="50" r="8" fill="hsl(var(--divine-gold))"/>
+              <svg className="w-12 h-12 mx-auto mb-4 opacity-50" viewBox="0 0 100 100">
+                <circle cx="50" cy="50" r="35" fill="none" stroke="hsl(var(--wisdom-amber))" strokeWidth="1"/>
+                <circle cx="50" cy="50" r="6" fill="hsl(var(--wisdom-amber))"/>
               </svg>
             </div>
             
-            <p className="text-divine-gold text-xl mb-4">
-              "The earth is but one country, and mankind its citizens."
+            <p className="text-wisdom-amber text-lg mb-4">
+              "The journey of a thousand miles begins with one step."
             </p>
             
             <p className="text-sm text-muted-foreground">
-              Built with love, guided by wisdom, inspired by unity
+              Built for seekers, guided by wisdom, inspired by truth
             </p>
           </div>
         </footer>
