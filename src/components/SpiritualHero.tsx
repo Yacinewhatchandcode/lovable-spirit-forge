@@ -45,8 +45,8 @@ export const SpiritualHero = () => {
 
   return (
     <div className="relative min-h-screen flex items-center justify-center px-6">
-      {/* Background overlay */}
-      <div className="absolute inset-0 bg-starfield opacity-30"></div>
+      {/* Elegant background texture */}
+      <div className="absolute inset-0 bg-classic-texture"></div>
       
       {/* Content */}
       <div className="relative z-10 text-center max-w-6xl mx-auto">

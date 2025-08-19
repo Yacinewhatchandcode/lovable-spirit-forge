@@ -43,13 +43,13 @@ export const ParticleField = () => {
       maxLife: Math.random() * 400 + 200, // Longer lifespan
     });
 
-    // Create fewer particles for subtlety
-    for (let i = 0; i < 25; i++) {
+    // Create very few particles for extreme subtlety
+    for (let i = 0; i < 8; i++) {
       particlesRef.current.push(createParticle());
     }
 
     const animate = () => {
-      ctx.fillStyle = 'rgba(11, 16, 32, 0.05)';
+      ctx.fillStyle = 'rgba(248, 247, 245, 0.08)';
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
       particlesRef.current.forEach((particle, index) => {

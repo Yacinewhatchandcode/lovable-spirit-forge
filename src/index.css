@@ -8,9 +8,9 @@
 
 @layer base {
   :root {
-    /* Core color palette - light mode */
-    --background: 220 23% 4%;
-    --foreground: 213 31% 91%;
+    /* Core color palette - classic light theme */
+    --background: 45 15% 96%;
+    --foreground: 220 13% 18%;
     
     --muted: 223 47% 11%;
     --muted-foreground: 215.4 16.3% 56.9%;
@@ -184,15 +184,11 @@
     animation: wisdom-pulse 3s ease-in-out infinite;
   }
 
-  .bg-starfield {
+  .bg-classic-texture {
     background-image: 
-      radial-gradient(1px 1px at 20px 30px, hsl(var(--wisdom-amber) / 0.4), transparent),
-      radial-gradient(1px 1px at 40px 70px, hsl(var(--quest-slate-light) / 0.3), transparent),
-      radial-gradient(1px 1px at 90px 40px, hsl(var(--wisdom-amber-light) / 0.5), transparent),
-      radial-gradient(1px 1px at 130px 80px, hsl(var(--insight-blue) / 0.3), transparent),
-      radial-gradient(1px 1px at 160px 30px, hsl(var(--quest-slate) / 0.2), transparent);
-    background-repeat: repeat;
-    background-size: 200px 100px;
+      linear-gradient(90deg, hsl(var(--wisdom-amber) / 0.03) 0%, transparent 50%, hsl(var(--wisdom-amber) / 0.03) 100%),
+      linear-gradient(0deg, hsl(var(--quest-slate) / 0.02) 0%, transparent 50%, hsl(var(--quest-slate) / 0.02) 100%);
+    background-size: 60px 60px, 40px 40px;
   }
 
   .text-gradient-wisdom {
