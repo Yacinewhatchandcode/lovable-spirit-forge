@@ -10,21 +10,21 @@ const Index = () => {
       
       <div className="relative z-10">
         {/* Hero Section */}
-        <section className="min-h-screen">
-          <SpiritualHero />
+        <section className="min-h-[60vh] flex items-center">
+          <div className="w-full">
+            <div className="text-center max-w-3xl mx-auto mb-12">
+              <h1 className="text-4xl md:text-5xl font-bold text-gradient-wisdom mb-4">
+                Spiritual Quest Companion
+              </h1>
+              <p className="text-lg text-muted-foreground">
+                A thoughtful AI guide for your journey of inner discovery
+              </p>
+            </div>
+          </div>
         </section>
 
-
-        {/* Wisdom Chat Interface */}
-        <section className="py-16 px-6">
-          <div className="max-w-4xl mx-auto text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-gradient-wisdom mb-4">
-              Wisdom Companion
-            </h2>
-            <p className="text-lg text-muted-foreground">
-              Engage in thoughtful dialogue with your AI wisdom guide
-            </p>
-          </div>
+        {/* Simple Chat Interface */}
+        <section className="py-8 px-6">
           <div className="max-w-4xl mx-auto">
             <SpiritualChat />
           </div>
