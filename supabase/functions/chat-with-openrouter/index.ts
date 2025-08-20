@@ -32,28 +32,76 @@ serve(async (req) => {
       );
     }
 
-    // Search for relevant Hidden Words based on the user's message
+    // Advanced semantic search for relevant Hidden Words
     let relevantHiddenWord = null;
     try {
-      const { data: hiddenWords, error } = await supabase
+      // First, try to find direct text matches for specific quotes
+      const directMatch = await supabase
         .from('hidden_words')
         .select('*')
-        .or(`text.ilike.%${message}%,addressee.ilike.%${message}%,section_title.ilike.%${message}%`)
+        .ilike('text', `%${message}%`)
         .limit(1);
 
-      if (!error && hiddenWords && hiddenWords.length > 0) {
-        relevantHiddenWord = hiddenWords[0];
-        console.log('Found relevant Hidden Word:', relevantHiddenWord);
+      if (directMatch.data && directMatch.data.length > 0) {
+        relevantHiddenWord = directMatch.data[0];
+        console.log('Found direct text match:', relevantHiddenWord);
       } else {
-        // If no specific matches, get a random one for general context
-        const { data: randomWords } = await supabase
-          .from('hidden_words')
-          .select('*')
-          .limit(1);
+        // If no direct match, do semantic search based on key concepts
+        let searchTerms = [];
+        const lowercaseMessage = message.toLowerCase();
         
-        if (randomWords && randomWords.length > 0) {
-          relevantHiddenWord = randomWords[0];
-          console.log('Using random Hidden Word:', relevantHiddenWord);
+        // Extract key spiritual concepts and map to relevant search terms
+        if (lowercaseMessage.includes('love') || lowercaseMessage.includes('beloved') || lowercaseMessage.includes('heart')) {
+          searchTerms = ['love', 'beloved', 'heart', 'affection'];
+        } else if (lowercaseMessage.includes('justice') || lowercaseMessage.includes('fair') || lowercaseMessage.includes('right')) {
+          searchTerms = ['justice', 'fair', 'righteous'];
+        } else if (lowercaseMessage.includes('peace') || lowercaseMessage.includes('calm') || lowercaseMessage.includes('tranquil')) {
+          searchTerms = ['peace', 'tranquil', 'serenity', 'calm'];
+        } else if (lowercaseMessage.includes('soul') || lowercaseMessage.includes('spirit') || lowercaseMessage.includes('spiritual')) {
+          searchTerms = ['soul', 'spirit', 'spiritual', 'essence'];
+        } else if (lowercaseMessage.includes('god') || lowercaseMessage.includes('divine') || lowercaseMessage.includes('lord')) {
+          searchTerms = ['God', 'divine', 'Lord', 'Creator'];
+        } else if (lowercaseMessage.includes('wisdom') || lowercaseMessage.includes('knowledge') || lowercaseMessage.includes('understand')) {
+          searchTerms = ['wisdom', 'knowledge', 'understand', 'know'];
+        } else if (lowercaseMessage.includes('truth') || lowercaseMessage.includes('reality')) {
+          searchTerms = ['truth', 'reality', 'true'];
+        } else if (lowercaseMessage.includes('death') || lowercaseMessage.includes('die') || lowercaseMessage.includes('eternal')) {
+          searchTerms = ['death', 'eternal', 'immortal', 'die'];
+        } else if (lowercaseMessage.includes('friend') || lowercaseMessage.includes('companion')) {
+          searchTerms = ['friend', 'companion', 'brother'];
+        } else if (lowercaseMessage.includes('world') || lowercaseMessage.includes('earth') || lowercaseMessage.includes('material')) {
+          searchTerms = ['world', 'earth', 'earthly', 'material'];
+        }
+
+        // If we have specific terms, search for them
+        if (searchTerms.length > 0) {
+          const semanticQuery = searchTerms.map(term => `text.ilike.%${term}%`).join(',');
+          const { data: semanticMatches } = await supabase
+            .from('hidden_words')
+            .select('*')
+            .or(semanticQuery)
+            .limit(5);
+
+          if (semanticMatches && semanticMatches.length > 0) {
+            // Pick the most relevant one (could be improved with better ranking)
+            relevantHiddenWord = semanticMatches[0];
+            console.log('Found semantic match:', relevantHiddenWord);
+          }
+        }
+
+        // Final fallback to a meaningful random quote
+        if (!relevantHiddenWord) {
+          const { data: randomQuotes } = await supabase
+            .from('hidden_words')
+            .select('*')
+            .order('number')
+            .limit(10);
+          
+          if (randomQuotes && randomQuotes.length > 0) {
+            const randomIndex = Math.floor(Math.random() * randomQuotes.length);
+            relevantHiddenWord = randomQuotes[randomIndex];
+            console.log('Using meaningful random quote:', relevantHiddenWord);
+          }
         }
       }
     } catch (dbError) {
@@ -73,9 +121,13 @@ serve(async (req) => {
         messages: [
           {
             role: 'system',
-            content: `You are a wise spiritual guide offering compassionate guidance and insights. When you provide spiritual guidance, if there's a relevant Hidden Words quote available, end your response by naturally introducing it with phrases like "This reminds me of this beautiful passage from the Hidden Words..." or "There's a Bahá'í Hidden Words quote that speaks to this..." - but ONLY mention this if you'll be provided with a relevant quote. 
+            content: `You are a wise spiritual guide offering compassionate guidance and insights based on Bahá'í teachings and the Hidden Words. 
 
-Keep your main response thoughtful, empathetic, and naturally flowing. Respond with empathy, wisdom, and gentle encouragement. Keep responses concise but meaningful.`
+${relevantHiddenWord ? `Here is a relevant Hidden Words passage that relates to the user's question: "${relevantHiddenWord.text}" (${relevantHiddenWord.addressee}, ${relevantHiddenWord.part} #${relevantHiddenWord.number}). ` : ''}
+
+When you provide spiritual guidance, naturally mention if there's a relevant Hidden Words passage by saying something like "This reminds me of a beautiful passage from the Hidden Words..." or "There's a profound quote from the Hidden Words that speaks to this..." 
+
+Keep your response thoughtful, empathetic, and naturally flowing. Respond with empathy, wisdom, and gentle encouragement. Be concise but meaningful.`
           },
           {
             role: 'user',
