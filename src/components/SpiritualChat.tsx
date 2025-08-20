@@ -319,14 +319,18 @@ export const SpiritualChat = () => {
             </Button>
           </div>
 
-          {/* Main input row */}
+          {/* Main input row - Mobile optimized */}
           <div className="flex space-x-2 md:space-x-3 flex-1">
             <Input
               value={inputValue}
               onChange={(e) => setInputValue(e.target.value)}
               onKeyPress={handleKeyPress}
               placeholder="Share your thoughts and seek wisdom..."
-              className="flex-1 bg-input border border-border text-foreground placeholder:text-muted-foreground focus:border-ring focus:ring-1 focus:ring-ring rounded-full px-4 py-2 md:py-3"
+              className="flex-1 bg-input border border-border text-foreground placeholder:text-muted-foreground focus:border-ring focus:ring-1 focus:ring-ring rounded-full px-3 sm:px-4 py-2 md:py-3 text-sm sm:text-base mobile-touch-target android-text-size"
+              autoComplete="off"
+              autoCorrect="off"
+              autoCapitalize="sentences"
+              spellCheck="true"
             />
             
             {/* Voice button - inline on desktop */}
@@ -334,7 +338,7 @@ export const SpiritualChat = () => {
               onClick={handleVoiceInput}
               variant="ghost"
               size="icon"
-              className={`hidden md:flex border-0 text-muted-foreground hover:bg-accent hover:text-foreground transition-all duration-200 ${
+              className={`hidden md:flex border-0 text-muted-foreground hover:bg-accent hover:text-foreground transition-all duration-200 mobile-touch-target ${
                 isListening ? 'animate-pulse bg-accent' : ''
               }`}
             >
@@ -344,9 +348,9 @@ export const SpiritualChat = () => {
             <Button
               onClick={handleSendMessage}
               disabled={!inputValue.trim() || isLoading}
-              className="bg-primary text-primary-foreground hover:bg-primary/90 transition-all duration-200 rounded-full px-4 md:px-6 font-medium"
+              className="bg-primary text-primary-foreground hover:bg-primary/90 transition-all duration-200 rounded-full px-3 sm:px-4 md:px-6 font-medium mobile-touch-target"
             >
-              <Send className="w-4 h-4" />
+              <Send className="w-3 h-3 sm:w-4 sm:h-4" />
             </Button>
           </div>
         </div>
