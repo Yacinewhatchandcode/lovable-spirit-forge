@@ -13,6 +13,14 @@ interface Message {
   isUser: boolean;
   timestamp: Date;
   hasQuote?: boolean;
+  hiddenWord?: {
+    id: string;
+    text: string;
+    addressee: string;
+    part: string;
+    number: number;
+    section_title: string;
+  };
 }
 
 // Function to get random wisdom quote as fallback
@@ -101,7 +109,8 @@ export const SpiritualChat = () => {
         text: data.response || "I apologize, but I cannot provide a response at this moment. Please try again.",
         isUser: false,
         timestamp: new Date(),
-        hasQuote: Math.random() > 0.7
+        hasQuote: !!data.hiddenWord,
+        hiddenWord: data.hiddenWord || undefined
       };
 
       setMessages(prev => [...prev, aiMessage]);
@@ -187,30 +196,75 @@ export const SpiritualChat = () => {
       <ScrollArea ref={scrollAreaRef} className="flex-1 p-4 md:p-6">
         <div className="space-y-3 md:space-y-4">
           {messages.map((message) => (
-            <div
-              key={message.id}
-              className={`flex ${message.isUser ? 'justify-end' : 'justify-start'}`}
-            >
-              <div
-                className={`max-w-[85%] md:max-w-[75%] p-3 md:p-4 rounded-2xl transition-all duration-200 ${
-                  message.isUser
-                    ? 'bg-primary text-primary-foreground'
-                    : 'bg-muted text-muted-foreground border border-border'
-                }`}
-              >
-                <p className="text-sm md:text-base leading-relaxed">
-                  {message.text}
-                </p>
-                
-                <div className="flex items-center justify-between mt-2">
-                  <span className="text-xs opacity-70">
-                    {message.timestamp.toLocaleTimeString()}
-                  </span>
-                  {!message.isUser && (
-                    <Heart className="w-3 h-3 opacity-50" />
-                  )}
+            <div key={message.id} className="space-y-4">
+              <div className={`flex ${message.isUser ? 'justify-end' : 'justify-start'}`}>
+                <div
+                  className={`max-w-[85%] md:max-w-[75%] p-3 md:p-4 rounded-2xl transition-all duration-200 ${
+                    message.isUser
+                      ? 'bg-primary text-primary-foreground'
+                      : 'bg-muted text-muted-foreground border border-border'
+                  }`}
+                >
+                  <p className="text-sm md:text-base leading-relaxed">
+                    {message.text}
+                  </p>
+                  
+                  <div className="flex items-center justify-between mt-2">
+                    <span className="text-xs opacity-70">
+                      {message.timestamp.toLocaleTimeString()}
+                    </span>
+                    {!message.isUser && (
+                      <Heart className="w-3 h-3 opacity-50" />
+                    )}
+                  </div>
                 </div>
               </div>
+
+              {/* Beautiful Hidden Words Quote - appears after AI responses */}
+              {!message.isUser && message.hasQuote && message.hiddenWord && (
+                <div className="flex justify-center px-4">
+                  <div className="glass-morphism border-divine p-6 max-w-lg mx-auto transition-all duration-700 opacity-100 transform translate-y-0">
+                    <div className="text-center space-y-4">
+                      {/* Calligraphy-style quote */}
+                      <div className="relative">
+                        <svg 
+                          className="absolute inset-0 w-full h-full opacity-20" 
+                          viewBox="0 0 300 120"
+                          fill="none"
+                        >
+                          <path
+                            d="M30 60 Q150 30 270 60"
+                            stroke="hsl(var(--primary))"
+                            strokeWidth="2"
+                            fill="none"
+                            strokeDasharray="500"
+                            strokeDashoffset="500"
+                            className="animate-[calligraphy-draw_3s_ease-in-out]"
+                          />
+                        </svg>
+                        
+                        <blockquote className="font-script text-primary text-xl md:text-2xl leading-snug tracking-wide relative z-10">
+                          "{message.hiddenWord.text}"
+                        </blockquote>
+                      </div>
+
+                      {/* Source attribution */}
+                      <div className="space-y-2">
+                        <p className="text-primary font-script text-sm">
+                          — {message.hiddenWord.addressee}
+                        </p>
+                        
+                        {/* Theme indicator */}
+                        <div className="inline-flex items-center px-2 py-1 rounded-full bg-primary/10 border border-primary/20">
+                          <span className="text-xs text-primary/80 capitalize">
+                            {message.hiddenWord.part} #{message.hiddenWord.number} - {message.hiddenWord.section_title}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
           ))}
           

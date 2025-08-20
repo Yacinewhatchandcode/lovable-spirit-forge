@@ -33,30 +33,27 @@ serve(async (req) => {
     }
 
     // Search for relevant Hidden Words based on the user's message
-    let relevantHiddenWords = '';
+    let relevantHiddenWord = null;
     try {
       const { data: hiddenWords, error } = await supabase
         .from('hidden_words')
         .select('*')
         .or(`text.ilike.%${message}%,addressee.ilike.%${message}%,section_title.ilike.%${message}%`)
-        .limit(3);
+        .limit(1);
 
       if (!error && hiddenWords && hiddenWords.length > 0) {
-        relevantHiddenWords = hiddenWords.map(hw => 
-          `"${hw.text}" — From ${hw.addressee} (${hw.section_title || 'Hidden Words'})`
-        ).join('\n\n');
-        console.log('Found relevant Hidden Words:', relevantHiddenWords);
+        relevantHiddenWord = hiddenWords[0];
+        console.log('Found relevant Hidden Word:', relevantHiddenWord);
       } else {
-        // If no specific matches, get a few random ones for general context
+        // If no specific matches, get a random one for general context
         const { data: randomWords } = await supabase
           .from('hidden_words')
           .select('*')
-          .limit(2);
+          .limit(1);
         
         if (randomWords && randomWords.length > 0) {
-          relevantHiddenWords = randomWords.map(hw => 
-            `"${hw.text}" — From ${hw.addressee} (${hw.section_title || 'Hidden Words'})`
-          ).join('\n\n');
+          relevantHiddenWord = randomWords[0];
+          console.log('Using random Hidden Word:', relevantHiddenWord);
         }
       }
     } catch (dbError) {
@@ -76,11 +73,7 @@ serve(async (req) => {
         messages: [
           {
             role: 'system',
-            content: `You are a wise spiritual guide offering compassionate guidance and insights. You have access to the Hidden Words, sacred wisdom texts that provide deep spiritual guidance. When responding, you should incorporate relevant quotes from these Hidden Words when they relate to the user's question. 
-
-${relevantHiddenWords ? `Here are some relevant Hidden Words that may help guide your response:\n\n${relevantHiddenWords}\n\n` : ''}
-
-Respond with empathy, wisdom, and gentle encouragement. When relevant Hidden Words are provided, weave them naturally into your guidance. Keep responses thoughtful but concise.`
+            content: 'You are a wise spiritual guide offering compassionate guidance and insights. Respond with empathy, wisdom, and gentle encouragement. Keep responses thoughtful but concise.'
           },
           {
             role: 'user',
@@ -107,7 +100,10 @@ Respond with empathy, wisdom, and gentle encouragement. When relevant Hidden Wor
     const aiResponse = data.choices?.[0]?.message?.content || 'I apologize, but I cannot provide a response at this moment. Please try again.';
 
     return new Response(
-      JSON.stringify({ response: aiResponse }),
+      JSON.stringify({ 
+        response: aiResponse,
+        hiddenWord: relevantHiddenWord 
+      }),
       { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );
 

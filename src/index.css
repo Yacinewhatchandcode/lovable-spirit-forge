@@ -205,4 +205,22 @@
     backdrop-filter: blur(8px);
     border: 1px solid rgba(255, 255, 255, 0.08);
   }
+
+  .border-divine {
+    border: 1px solid hsl(var(--primary) / 0.3);
+  }
+
+  /* Calligraphy animations */
+  @keyframes calligraphy-draw {
+    0% {
+      stroke-dashoffset: 500;
+    }
+    100% {
+      stroke-dashoffset: 0;
+    }
+  }
+
+  .animate-calligraphy-draw {
+    animation: calligraphy-draw 3s ease-in-out;
+  }
 }
