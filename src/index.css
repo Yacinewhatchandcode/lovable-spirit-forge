@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Great+Vibes&family=Inter:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Great+Vibes&family=Cinzel:wght@400;500;600&family=Inter:wght@300;400;500;600;700&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -213,14 +213,19 @@
   /* Calligraphy animations */
   @keyframes calligraphy-draw {
     0% {
-      stroke-dashoffset: 500;
+      stroke-dashoffset: 800;
+      opacity: 0;
+    }
+    20% {
+      opacity: 0.3;
     }
     100% {
       stroke-dashoffset: 0;
+      opacity: 0.1;
     }
   }
 
   .animate-calligraphy-draw {
-    animation: calligraphy-draw 3s ease-in-out;
+    animation: calligraphy-draw 4s ease-in-out forwards;
   }
 }

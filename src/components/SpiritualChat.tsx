@@ -222,42 +222,50 @@ export const SpiritualChat = () => {
 
               {/* Beautiful Hidden Words Quote - appears after AI responses */}
               {!message.isUser && message.hasQuote && message.hiddenWord && (
-                <div className="flex justify-center px-4">
-                  <div className="glass-morphism border-divine p-6 max-w-lg mx-auto transition-all duration-700 opacity-100 transform translate-y-0">
-                    <div className="text-center space-y-4">
+                <div className="flex justify-center px-4 mt-6">
+                  <div className="bg-white/95 backdrop-blur-sm border border-amber-200/50 rounded-lg p-8 max-w-2xl mx-auto shadow-lg">
+                    <div className="text-center space-y-6">
+                      {/* Title */}
+                      <div className="space-y-2">
+                        <h3 className="font-script text-2xl text-amber-700/90 tracking-wide">
+                          The Hidden Words
+                        </h3>
+                        <div className="w-16 h-px bg-gradient-to-r from-transparent via-amber-400 to-transparent mx-auto"></div>
+                      </div>
+
                       {/* Calligraphy-style quote */}
-                      <div className="relative">
+                      <div className="relative py-4">
                         <svg 
-                          className="absolute inset-0 w-full h-full opacity-20" 
-                          viewBox="0 0 300 120"
+                          className="absolute inset-0 w-full h-full opacity-10" 
+                          viewBox="0 0 400 160"
                           fill="none"
                         >
                           <path
-                            d="M30 60 Q150 30 270 60"
-                            stroke="hsl(var(--primary))"
+                            d="M40 80 Q200 40 360 80"
+                            stroke="#d97706"
                             strokeWidth="2"
                             fill="none"
-                            strokeDasharray="500"
-                            strokeDashoffset="500"
-                            className="animate-[calligraphy-draw_3s_ease-in-out]"
+                            strokeDasharray="800"
+                            strokeDashoffset="800"
+                            className="animate-calligraphy-draw"
                           />
                         </svg>
                         
-                        <blockquote className="font-script text-primary text-xl md:text-2xl leading-snug tracking-wide relative z-10">
+                        <blockquote className="font-script text-amber-800 text-2xl md:text-3xl leading-relaxed tracking-wide relative z-10 font-medium">
                           "{message.hiddenWord.text}"
                         </blockquote>
                       </div>
 
                       {/* Source attribution */}
-                      <div className="space-y-2">
-                        <p className="text-primary font-script text-sm">
+                      <div className="space-y-3">
+                        <p className="text-amber-700 font-serif text-lg italic">
                           — {message.hiddenWord.addressee}
                         </p>
                         
-                        {/* Theme indicator */}
-                        <div className="inline-flex items-center px-2 py-1 rounded-full bg-primary/10 border border-primary/20">
-                          <span className="text-xs text-primary/80 capitalize">
-                            {message.hiddenWord.part} #{message.hiddenWord.number} - {message.hiddenWord.section_title}
+                        {/* Elegant metadata */}
+                        <div className="text-center">
+                          <span className="inline-block px-4 py-1 text-sm text-amber-600/80 bg-amber-50 rounded-full border border-amber-200/50">
+                            {message.hiddenWord.part === 'arabic' ? 'Arabic' : 'Persian'} • #{message.hiddenWord.number} • {message.hiddenWord.section_title}
                           </span>
                         </div>
                       </div>
