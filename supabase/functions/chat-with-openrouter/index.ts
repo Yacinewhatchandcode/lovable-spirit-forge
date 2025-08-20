@@ -20,7 +20,7 @@ serve(async (req) => {
   }
 
   try {
-    const { message } = await req.json();
+    const { message, history = [], excludeIds = [] } = await req.json();
 
     console.log('Received message:', message);
 
@@ -33,74 +33,111 @@ serve(async (req) => {
     }
 
     // Advanced semantic search for relevant Hidden Words
-    let relevantHiddenWord = null;
+    let relevantHiddenWord: any = null;
     try {
-      // First, try to find direct text matches for specific quotes
-      const directMatch = await supabase
+      // 1) Try direct phrase match first
+      let directQuery = supabase
         .from('hidden_words')
         .select('*')
         .ilike('text', `%${message}%`)
         .limit(1);
 
+      if (excludeIds.length > 0) {
+        const inList = `(${excludeIds.map((id: string) => `"${id}"`).join(',')})`;
+        // @ts-ignore - postgrest filter
+        directQuery = (directQuery as any).not('id', 'in', inList);
+      }
+      const directMatch = await directQuery;
+
       if (directMatch.data && directMatch.data.length > 0) {
         relevantHiddenWord = directMatch.data[0];
         console.log('Found direct text match:', relevantHiddenWord);
       } else {
-        // If no direct match, do semantic search based on key concepts
-        let searchTerms = [];
+        // 2) Build richer semantic terms from message
         const lowercaseMessage = message.toLowerCase();
-        
-        // Extract key spiritual concepts and map to relevant search terms
-        if (lowercaseMessage.includes('love') || lowercaseMessage.includes('beloved') || lowercaseMessage.includes('heart')) {
-          searchTerms = ['love', 'beloved', 'heart', 'affection'];
-        } else if (lowercaseMessage.includes('justice') || lowercaseMessage.includes('fair') || lowercaseMessage.includes('right')) {
-          searchTerms = ['justice', 'fair', 'righteous'];
-        } else if (lowercaseMessage.includes('peace') || lowercaseMessage.includes('calm') || lowercaseMessage.includes('tranquil')) {
-          searchTerms = ['peace', 'tranquil', 'serenity', 'calm'];
-        } else if (lowercaseMessage.includes('soul') || lowercaseMessage.includes('spirit') || lowercaseMessage.includes('spiritual')) {
-          searchTerms = ['soul', 'spirit', 'spiritual', 'essence'];
-        } else if (lowercaseMessage.includes('god') || lowercaseMessage.includes('divine') || lowercaseMessage.includes('lord')) {
-          searchTerms = ['God', 'divine', 'Lord', 'Creator'];
-        } else if (lowercaseMessage.includes('wisdom') || lowercaseMessage.includes('knowledge') || lowercaseMessage.includes('understand')) {
-          searchTerms = ['wisdom', 'knowledge', 'understand', 'know'];
-        } else if (lowercaseMessage.includes('truth') || lowercaseMessage.includes('reality')) {
-          searchTerms = ['truth', 'reality', 'true'];
-        } else if (lowercaseMessage.includes('death') || lowercaseMessage.includes('die') || lowercaseMessage.includes('eternal')) {
-          searchTerms = ['death', 'eternal', 'immortal', 'die'];
-        } else if (lowercaseMessage.includes('friend') || lowercaseMessage.includes('companion')) {
-          searchTerms = ['friend', 'companion', 'brother'];
-        } else if (lowercaseMessage.includes('world') || lowercaseMessage.includes('earth') || lowercaseMessage.includes('material')) {
-          searchTerms = ['world', 'earth', 'earthly', 'material'];
-        }
+        const baseTerms = Array.from(new Set(
+          lowercaseMessage
+            .replace(/[^a-z0-9\s'”\-]+/g, ' ')
+            .split(/\s+/)
+            .filter(w => w.length >= 3 && ![
+              'the','and','for','with','that','this','have','from','your','you','are','but','not','was','were','has','had','his','her','she','him','our','their','them','who','what','when','where','why','how','can','will','shall','into','unto','upon','over','under','between','about','again','once','only'
+            ].includes(w))
+        ));
 
-        // If we have specific terms, search for them
+        // Add simple concept expansions
+        const expansions: Record<string, string[]> = {
+          love: ['beloved','heart','affection','devotion','adoration','lover','loving'],
+          justice: ['fair','righteous','equity','right'],
+          peace: ['calm','tranquil','serenity','quiet','rest'],
+          soul: ['spirit','spiritual','essence','heart'],
+          god: ['divine','lord','creator','beloved'],
+          wisdom: ['knowledge','understand','understanding','know'],
+          truth: ['reality','true','verity'],
+          death: ['die','eternal','immortal','mortality'],
+          friend: ['companion','brother','beloved'],
+          world: ['earth','earthly','material','dust'],
+        };
+        const expanded = new Set<string>(baseTerms);
+        for (const t of baseTerms) {
+          if (expansions[t]) expansions[t].forEach(x => expanded.add(x));
+        }
+        const searchTerms = Array.from(expanded);
+
         if (searchTerms.length > 0) {
-          const semanticQuery = searchTerms.map(term => `text.ilike.%${term}%`).join(',');
-          const { data: semanticMatches } = await supabase
+          const orConditions: string[] = [];
+          for (const term of searchTerms) {
+            const like = `%${term}%`;
+            orConditions.push(`text.ilike.${like}`, `addressee.ilike.${like}`, `section_title.ilike.${like}`);
+          }
+
+          let semQuery = supabase
             .from('hidden_words')
             .select('*')
-            .or(semanticQuery)
-            .limit(5);
+            .or(orConditions.join(','))
+            .limit(50);
+
+          if (excludeIds.length > 0) {
+            const inList = `(${excludeIds.map((id: string) => `"${id}"`).join(',')})`;
+            // @ts-ignore
+            semQuery = (semQuery as any).not('id', 'in', inList);
+          }
+
+          const { data: semanticMatches } = await semQuery;
 
           if (semanticMatches && semanticMatches.length > 0) {
-            // Pick the most relevant one (could be improved with better ranking)
-            relevantHiddenWord = semanticMatches[0];
-            console.log('Found semantic match:', relevantHiddenWord);
+            // Rank candidates client-side by simple term frequency score
+            const scored = semanticMatches.map((hw: any) => {
+              const hay = `${hw.text} ${hw.addressee} ${hw.section_title ?? ''}`.toLowerCase();
+              let score = 0;
+              for (const t of searchTerms) {
+                if (hay.includes(t)) score += 1;
+              }
+              // Prefer exact addressee/title hits slightly
+              if (hw.addressee && searchTerms.some(t => hw.addressee.toLowerCase().includes(t))) score += 1.5;
+              return { hw, score };
+            });
+            scored.sort((a: any, b: any) => b.score - a.score);
+            relevantHiddenWord = scored[0].hw;
+            console.log('Found semantic match (ranked):', relevantHiddenWord);
           }
         }
 
-        // Final fallback to a meaningful random quote
+        // 3) Final fallback to a non-repeating random quote
         if (!relevantHiddenWord) {
-          const { data: randomQuotes } = await supabase
+          let fallbackQuery = supabase
             .from('hidden_words')
             .select('*')
-            .order('number')
-            .limit(10);
-          
+            .limit(50);
+          if (excludeIds.length > 0) {
+            const inList = `(${excludeIds.map((id: string) => `"${id}"`).join(',')})`;
+            // @ts-ignore
+            fallbackQuery = (fallbackQuery as any).not('id', 'in', inList);
+          }
+          const { data: randomQuotes } = await fallbackQuery;
           if (randomQuotes && randomQuotes.length > 0) {
             const randomIndex = Math.floor(Math.random() * randomQuotes.length);
             relevantHiddenWord = randomQuotes[randomIndex];
-            console.log('Using meaningful random quote:', relevantHiddenWord);
+            console.log('Using meaningful random quote (no repeat):', relevantHiddenWord);
           }
         }
       }
@@ -121,14 +158,9 @@ serve(async (req) => {
         messages: [
           {
             role: 'system',
-            content: `You are a wise spiritual guide offering compassionate guidance and insights based on Bahá'í teachings and the Hidden Words. 
-
-${relevantHiddenWord ? `Here is a relevant Hidden Words passage that relates to the user's question: "${relevantHiddenWord.text}" (${relevantHiddenWord.addressee}, ${relevantHiddenWord.part} #${relevantHiddenWord.number}). ` : ''}
-
-When you provide spiritual guidance, naturally mention if there's a relevant Hidden Words passage by saying something like "This reminds me of a beautiful passage from the Hidden Words..." or "There's a profound quote from the Hidden Words that speaks to this..." 
-
-Keep your response thoughtful, empathetic, and naturally flowing. Respond with empathy, wisdom, and gentle encouragement. Be concise but meaningful.`
+            content: `You are a wise spiritual guide offering compassionate guidance and insights based on Bahá'í teachings and the Hidden Words.\n\n${relevantHiddenWord ? `Do not quote the full passage verbatim. Instead, you may gently reference that a relevant passage exists; the UI will present it after your answer. Passage context: (${relevantHiddenWord.addressee}, ${relevantHiddenWord.part} #${relevantHiddenWord.number}).` : ''}\n\nKeep your response thoughtful, empathetic, concise, and meaningful.`
           },
+          ...history,
           {
             role: 'user',
             content: message

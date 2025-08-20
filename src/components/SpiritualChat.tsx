@@ -57,6 +57,7 @@ export const SpiritualChat = () => {
   const [inputValue, setInputValue] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [isListening, setIsListening] = useState(false);
+  const [usedHiddenWordIds, setUsedHiddenWordIds] = useState<string[]>([]);
   const scrollAreaRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
 
@@ -89,9 +90,15 @@ export const SpiritualChat = () => {
     setIsLoading(true);
 
     try {
-      // Call OpenRouter via Supabase Edge Function
+      // Prepare short conversation history (without current message) for memory
+      const historyPayload = messages.slice(-8).map(m => ({
+        role: m.isUser ? 'user' as const : 'assistant' as const,
+        content: m.text,
+      }));
+
+      // Call OpenRouter via Supabase Edge Function with history and excludeIds
       const { data, error } = await supabase.functions.invoke('chat-with-openrouter', {
-        body: { message: messageText }
+        body: { message: messageText, history: historyPayload, excludeIds: usedHiddenWordIds }
       });
 
       if (error) {
@@ -114,6 +121,10 @@ export const SpiritualChat = () => {
       };
 
       setMessages(prev => [...prev, aiMessage]);
+
+      if (aiMessage.hiddenWord?.id) {
+        setUsedHiddenWordIds(prev => [...prev, aiMessage.hiddenWord!.id]);
+      }
 
       toast({
         description: "Spiritual guidance received ✨",
@@ -228,7 +239,7 @@ export const SpiritualChat = () => {
                       {/* Title */}
                       <div className="space-y-2">
                         <h3 className="font-script text-2xl text-amber-700/90 tracking-wide">
-                          The Hidden Words
+                          {message.hiddenWord.addressee}
                         </h3>
                         <div className="w-16 h-px bg-gradient-to-r from-transparent via-amber-400 to-transparent mx-auto"></div>
                       </div>
@@ -259,13 +270,12 @@ export const SpiritualChat = () => {
                       {/* Source attribution */}
                       <div className="space-y-3">
                         <p className="text-amber-700 font-serif text-lg italic">
-                          — {message.hiddenWord.addressee}
+                          — The Hidden Words
                         </p>
-                        
                         {/* Elegant metadata */}
                         <div className="text-center">
                           <span className="inline-block px-4 py-1 text-sm text-amber-600/80 bg-amber-50 rounded-full border border-amber-200/50">
-                            {message.hiddenWord.part === 'arabic' ? 'Arabic' : 'Persian'} • #{message.hiddenWord.number} • {message.hiddenWord.section_title}
+                            {(message.hiddenWord.part === 'arabic' ? 'Arabic' : 'Persian')} • #{message.hiddenWord.number} • {message.hiddenWord.section_title}
                           </span>
                         </div>
                       </div>
