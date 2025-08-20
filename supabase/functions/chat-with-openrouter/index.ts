@@ -1,7 +1,12 @@
 import "https://deno.land/x/xhr@0.1.0/mod.ts";
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.55.0';
 
 const openRouterApiKey = Deno.env.get('OPENROUTER_API_KEY');
+const supabaseUrl = Deno.env.get('SUPABASE_URL');
+const supabaseAnonKey = Deno.env.get('SUPABASE_ANON_KEY');
+
+const supabase = createClient(supabaseUrl!, supabaseAnonKey!);
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -27,6 +32,37 @@ serve(async (req) => {
       );
     }
 
+    // Search for relevant Hidden Words based on the user's message
+    let relevantHiddenWords = '';
+    try {
+      const { data: hiddenWords, error } = await supabase
+        .from('hidden_words')
+        .select('*')
+        .or(`text.ilike.%${message}%,addressee.ilike.%${message}%,section_title.ilike.%${message}%`)
+        .limit(3);
+
+      if (!error && hiddenWords && hiddenWords.length > 0) {
+        relevantHiddenWords = hiddenWords.map(hw => 
+          `"${hw.text}" — From ${hw.addressee} (${hw.section_title || 'Hidden Words'})`
+        ).join('\n\n');
+        console.log('Found relevant Hidden Words:', relevantHiddenWords);
+      } else {
+        // If no specific matches, get a few random ones for general context
+        const { data: randomWords } = await supabase
+          .from('hidden_words')
+          .select('*')
+          .limit(2);
+        
+        if (randomWords && randomWords.length > 0) {
+          relevantHiddenWords = randomWords.map(hw => 
+            `"${hw.text}" — From ${hw.addressee} (${hw.section_title || 'Hidden Words'})`
+          ).join('\n\n');
+        }
+      }
+    } catch (dbError) {
+      console.error('Error fetching Hidden Words:', dbError);
+    }
+
     const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
       method: 'POST',
       headers: {
@@ -40,7 +76,11 @@ serve(async (req) => {
         messages: [
           {
             role: 'system',
-            content: 'You are a wise spiritual guide offering compassionate guidance and insights. Respond with empathy, wisdom, and gentle encouragement. Keep responses thoughtful but concise.'
+            content: `You are a wise spiritual guide offering compassionate guidance and insights. You have access to the Hidden Words, sacred wisdom texts that provide deep spiritual guidance. When responding, you should incorporate relevant quotes from these Hidden Words when they relate to the user's question. 
+
+${relevantHiddenWords ? `Here are some relevant Hidden Words that may help guide your response:\n\n${relevantHiddenWords}\n\n` : ''}
+
+Respond with empathy, wisdom, and gentle encouragement. When relevant Hidden Words are provided, weave them naturally into your guidance. Keep responses thoughtful but concise.`
           },
           {
             role: 'user',
