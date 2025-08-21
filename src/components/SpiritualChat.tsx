@@ -249,34 +249,58 @@ export const SpiritualChat = ({ session }: SpiritualChatProps) => {
                 </div>
               </div>
 
-              {/* Beautiful Hidden Words Quote - appears after AI responses */}
+              {/* "It reminds me of" transition and Hidden Words Quote */}
               {!message.isUser && message.hasQuote && message.hiddenWord && (
-                <div className="flex justify-center px-2 sm:px-4 mt-4 sm:mt-6">
-                  <div className="bg-primary/5 backdrop-blur-sm border border-primary/20 rounded-xl p-4 sm:p-6 md:p-8 max-w-2xl mx-auto shadow-sm">
-                    <div className="text-center space-y-4 sm:space-y-6">
-                      {/* Title */}
-                      <div className="space-y-2">
-                        <h3 className="font-script text-lg sm:text-xl md:text-2xl text-primary tracking-wide">
-                          {message.hiddenWord.addressee}
-                        </h3>
-                        <div className="w-12 sm:w-16 h-px bg-gradient-to-r from-transparent via-primary/40 to-transparent mx-auto"></div>
-                      </div>
+                <div className="space-y-6">
+                  {/* "It reminds me of" transition */}
+                  <div className="flex justify-center">
+                    <div className="text-center px-4 py-2 bg-primary/5 rounded-full border border-primary/20">
+                      <p className="text-sm text-primary/80 font-serif italic">
+                        It reminds me of...
+                      </p>
+                    </div>
+                  </div>
 
-                      {/* Quote */}
-                      <blockquote className="font-serif text-foreground/90 text-base sm:text-lg md:text-xl leading-relaxed tracking-wide font-medium italic">
-                        "{message.hiddenWord.text}"
-                      </blockquote>
+                  {/* Beautiful Hidden Words Quote in papyrus style */}
+                  <div className="flex justify-center px-2 sm:px-4">
+                    <div className="bg-gradient-to-br from-amber-50/90 to-yellow-50/90 dark:from-amber-950/30 dark:to-yellow-950/30 backdrop-blur-sm border-2 border-amber-200/50 dark:border-amber-700/50 rounded-xl p-6 sm:p-8 md:p-10 max-w-2xl mx-auto shadow-lg relative overflow-hidden">
+                      {/* Parchment texture overlay */}
+                      <div className="absolute inset-0 bg-gradient-to-br from-transparent via-amber-100/20 to-amber-200/20 dark:from-transparent dark:via-amber-900/20 dark:to-amber-800/20 pointer-events-none"></div>
+                      
+                      {/* Decorative corners */}
+                      <div className="absolute top-2 left-2 w-4 h-4 border-l-2 border-t-2 border-amber-300/60 dark:border-amber-600/60"></div>
+                      <div className="absolute top-2 right-2 w-4 h-4 border-r-2 border-t-2 border-amber-300/60 dark:border-amber-600/60"></div>
+                      <div className="absolute bottom-2 left-2 w-4 h-4 border-l-2 border-b-2 border-amber-300/60 dark:border-amber-600/60"></div>
+                      <div className="absolute bottom-2 right-2 w-4 h-4 border-r-2 border-b-2 border-amber-300/60 dark:border-amber-600/60"></div>
+                      
+                      <div className="relative text-center space-y-6">
+                        {/* Title in ancient style */}
+                        <div className="space-y-3">
+                          <h3 className="font-papyrus text-xl sm:text-2xl md:text-3xl text-amber-800 dark:text-amber-200 tracking-wider drop-shadow-sm">
+                            {message.hiddenWord.addressee}
+                          </h3>
+                          <div className="w-16 sm:w-20 h-0.5 bg-gradient-to-r from-transparent via-amber-600/60 to-transparent mx-auto"></div>
+                        </div>
 
-                      {/* Source attribution */}
-                      <div className="space-y-2 sm:space-y-3">
-                        <p className="text-primary/80 font-serif text-sm sm:text-base italic">
-                          — The Hidden Words
-                        </p>
-                        {/* Elegant metadata */}
-                        <div className="text-center">
-                          <span className="inline-block px-3 py-1 text-xs sm:text-sm text-primary/70 bg-primary/10 rounded-full border border-primary/20">
-                            {(message.hiddenWord.part === 'arabic' ? 'Arabic' : 'Persian')} • #{message.hiddenWord.number} • {message.hiddenWord.section_title}
-                          </span>
+                        {/* Quote in papyrus style */}
+                        <blockquote className="font-papyrus text-amber-900 dark:text-amber-100 text-lg sm:text-xl md:text-2xl leading-relaxed tracking-wide font-normal relative">
+                          <span className="text-3xl text-amber-700 dark:text-amber-300 absolute -left-2 -top-2">"</span>
+                          {message.hiddenWord.text}
+                          <span className="text-3xl text-amber-700 dark:text-amber-300 absolute -right-1 -bottom-3">"</span>
+                        </blockquote>
+
+                        {/* Source attribution in ancient style */}
+                        <div className="space-y-3">
+                          <p className="text-amber-700 dark:text-amber-300 font-cinzel text-base sm:text-lg italic tracking-wide">
+                            — The Hidden Words of Bahá'u'lláh
+                          </p>
+                          
+                          {/* Elegant metadata with ancient styling */}
+                          <div className="text-center">
+                            <span className="inline-block px-4 py-2 text-sm text-amber-800 dark:text-amber-200 bg-amber-100/60 dark:bg-amber-900/40 rounded-lg border border-amber-300/50 dark:border-amber-600/50 font-cinzel tracking-wide">
+                              {(message.hiddenWord.part === 'arabic' ? 'Arabic' : 'Persian')} • Passage #{message.hiddenWord.number}
+                            </span>
+                          </div>
                         </div>
                       </div>
                     </div>

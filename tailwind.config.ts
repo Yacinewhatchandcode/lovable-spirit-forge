@@ -78,6 +78,11 @@ export default {
 					light: 'hsl(var(--insight-blue-light))'
 				}
 			},
+			fontFamily: {
+				'papyrus': ['Papyrus', 'fantasy', 'serif'],
+				'cinzel': ['Cinzel', 'serif'],
+				'cormorant': ['Cormorant Garamond', 'serif'],
+			},
 			borderRadius: {
 				lg: 'var(--radius)',
 				md: 'calc(var(--radius) - 2px)',
