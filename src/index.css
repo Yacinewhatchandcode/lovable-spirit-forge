@@ -246,6 +246,22 @@
     min-width: 44px;
   }
 
+  /* Mobile-specific optimizations */
+  @media (max-width: 640px) {
+    body {
+      font-size: 16px; /* Prevent zoom on focus */
+    }
+    
+    input, textarea {
+      font-size: 16px; /* Prevent zoom on focus */
+    }
+    
+    .mobile-full-height {
+      height: 100vh;
+      height: 100dvh; /* Dynamic viewport height for mobile */
+    }
+  }
+
   /* iOS specific optimizations */
   @supports (-webkit-touch-callout: none) {
     .ios-scroll {

@@ -185,9 +185,9 @@ export const SpiritualChat = () => {
   };
 
   return (
-    <Card className="bg-white border border-border shadow-lg h-[600px] md:h-[700px] flex flex-col max-w-4xl mx-auto">
-      {/* Header */}
-      <div className="p-4 md:p-6 border-b border-border bg-white">
+    <Card className="bg-card/50 backdrop-blur-sm border border-border/50 shadow-lg flex flex-col flex-1 min-h-0 rounded-2xl">
+      {/* Compact Header - only show on larger screens */}
+      <div className="hidden sm:flex p-4 md:p-6 border-b border-border/30 bg-card/80 rounded-t-2xl">
         <div className="flex items-center space-x-3">
           <div className="w-10 h-10 md:w-12 md:h-12 rounded-full bg-primary/10 flex items-center justify-center">
             <Sparkles className="w-5 h-5 md:w-6 md:h-6 text-primary" />
@@ -204,25 +204,38 @@ export const SpiritualChat = () => {
       </div>
 
       {/* Messages */}
-      <ScrollArea ref={scrollAreaRef} className="flex-1 p-4 md:p-6">
-        <div className="space-y-3 md:space-y-4">
+      <ScrollArea ref={scrollAreaRef} className="flex-1 p-3 sm:p-4 md:p-6 min-h-0">
+        <div className="space-y-3 sm:space-y-4">
+          {messages.length === 0 && (
+            <div className="flex items-center justify-center h-full min-h-[200px]">
+              <div className="text-center max-w-sm">
+                <div className="w-16 h-16 mx-auto mb-4 bg-primary/10 rounded-full flex items-center justify-center">
+                  <Sparkles className="text-primary text-2xl" />
+                </div>
+                <p className="text-muted-foreground text-sm sm:text-base">
+                  Welcome, fellow seeker. Share your thoughts and seek wisdom.
+                </p>
+              </div>
+            </div>
+          )}
+          
           {messages.map((message) => (
             <div key={message.id} className="space-y-4">
               <div className={`flex ${message.isUser ? 'justify-end' : 'justify-start'}`}>
                 <div
-                  className={`max-w-[85%] md:max-w-[75%] p-3 md:p-4 rounded-2xl transition-all duration-200 ${
+                  className={`max-w-[90%] sm:max-w-[85%] md:max-w-[75%] p-3 sm:p-4 rounded-2xl transition-all duration-200 ${
                     message.isUser
                       ? 'bg-primary text-primary-foreground'
-                      : 'bg-muted text-muted-foreground border border-border'
+                      : 'bg-muted/80 text-foreground border border-border/50'
                   }`}
                 >
-                  <p className="text-sm md:text-base leading-relaxed">
+                  <p className="text-sm sm:text-base leading-relaxed whitespace-pre-wrap">
                     {message.text}
                   </p>
                   
                   <div className="flex items-center justify-between mt-2">
                     <span className="text-xs opacity-70">
-                      {message.timestamp.toLocaleTimeString()}
+                      {message.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                     </span>
                     {!message.isUser && (
                       <Heart className="w-3 h-3 opacity-50" />
@@ -233,48 +246,30 @@ export const SpiritualChat = () => {
 
               {/* Beautiful Hidden Words Quote - appears after AI responses */}
               {!message.isUser && message.hasQuote && message.hiddenWord && (
-                <div className="flex justify-center px-4 mt-6">
-                  <div className="bg-white/95 backdrop-blur-sm border border-amber-200/50 rounded-lg p-8 max-w-2xl mx-auto shadow-lg">
-                    <div className="text-center space-y-6">
+                <div className="flex justify-center px-2 sm:px-4 mt-4 sm:mt-6">
+                  <div className="bg-primary/5 backdrop-blur-sm border border-primary/20 rounded-xl p-4 sm:p-6 md:p-8 max-w-2xl mx-auto shadow-sm">
+                    <div className="text-center space-y-4 sm:space-y-6">
                       {/* Title */}
                       <div className="space-y-2">
-                        <h3 className="font-script text-2xl text-amber-700/90 tracking-wide">
+                        <h3 className="font-script text-lg sm:text-xl md:text-2xl text-primary tracking-wide">
                           {message.hiddenWord.addressee}
                         </h3>
-                        <div className="w-16 h-px bg-gradient-to-r from-transparent via-amber-400 to-transparent mx-auto"></div>
+                        <div className="w-12 sm:w-16 h-px bg-gradient-to-r from-transparent via-primary/40 to-transparent mx-auto"></div>
                       </div>
 
-                      {/* Calligraphy-style quote */}
-                      <div className="relative py-4">
-                        <svg 
-                          className="absolute inset-0 w-full h-full opacity-10" 
-                          viewBox="0 0 400 160"
-                          fill="none"
-                        >
-                          <path
-                            d="M40 80 Q200 40 360 80"
-                            stroke="#d97706"
-                            strokeWidth="2"
-                            fill="none"
-                            strokeDasharray="800"
-                            strokeDashoffset="800"
-                            className="animate-calligraphy-draw"
-                          />
-                        </svg>
-                        
-                        <blockquote className="font-script text-amber-800 text-2xl md:text-3xl leading-relaxed tracking-wide relative z-10 font-medium">
-                          "{message.hiddenWord.text}"
-                        </blockquote>
-                      </div>
+                      {/* Quote */}
+                      <blockquote className="font-serif text-foreground/90 text-base sm:text-lg md:text-xl leading-relaxed tracking-wide font-medium italic">
+                        "{message.hiddenWord.text}"
+                      </blockquote>
 
                       {/* Source attribution */}
-                      <div className="space-y-3">
-                        <p className="text-amber-700 font-serif text-lg italic">
+                      <div className="space-y-2 sm:space-y-3">
+                        <p className="text-primary/80 font-serif text-sm sm:text-base italic">
                           — The Hidden Words
                         </p>
                         {/* Elegant metadata */}
                         <div className="text-center">
-                          <span className="inline-block px-4 py-1 text-sm text-amber-600/80 bg-amber-50 rounded-full border border-amber-200/50">
+                          <span className="inline-block px-3 py-1 text-xs sm:text-sm text-primary/70 bg-primary/10 rounded-full border border-primary/20">
                             {(message.hiddenWord.part === 'arabic' ? 'Arabic' : 'Persian')} • #{message.hiddenWord.number} • {message.hiddenWord.section_title}
                           </span>
                         </div>
@@ -288,7 +283,7 @@ export const SpiritualChat = () => {
           
           {isLoading && (
             <div className="flex justify-start">
-              <div className="bg-muted text-muted-foreground p-3 md:p-4 rounded-2xl border border-border">
+              <div className="bg-muted/80 text-foreground p-3 sm:p-4 rounded-2xl border border-border/50">
                 <div className="flex space-x-2 items-center">
                   <span className="text-sm mr-2">Thinking...</span>
                   <div className="w-2 h-2 bg-primary rounded-full animate-bounce"></div>
@@ -302,55 +297,41 @@ export const SpiritualChat = () => {
       </ScrollArea>
 
       {/* Input */}
-      <div className="p-4 md:p-6 border-t border-border bg-white">
-        <div className="flex flex-col space-y-3 md:space-y-0 md:flex-row md:space-x-3">
-          {/* Voice button - separate row on mobile */}
-          <div className="md:hidden flex justify-center">
-            <Button
-              onClick={handleVoiceInput}
-              variant="outline"
-              size="sm"
-              className={`border border-border text-muted-foreground hover:bg-accent transition-all duration-200 ${
-                isListening ? 'animate-pulse bg-accent' : ''
-              }`}
-            >
-              <Mic className="w-4 h-4 mr-2" />
-              Voice Input
-            </Button>
-          </div>
-
-          {/* Main input row - Mobile optimized */}
-          <div className="flex space-x-2 md:space-x-3 flex-1">
+      <div className="p-3 sm:p-4 md:p-6 border-t border-border/30 bg-card/80 backdrop-blur-sm rounded-b-2xl">
+        <div className="flex gap-2 sm:gap-3">
+          {/* Voice button */}
+          <Button
+            onClick={handleVoiceInput}
+            variant="outline"
+            size="icon"
+            className={`shrink-0 h-11 w-11 sm:h-10 sm:w-10 mobile-touch-target border-border/50 hover:bg-accent transition-all duration-200 ${
+              isListening ? 'animate-pulse bg-accent' : ''
+            }`}
+          >
+            <Mic className="w-4 h-4" />
+          </Button>
+          
+          {/* Input and send */}
+          <div className="flex-1 relative">
             <Input
               value={inputValue}
               onChange={(e) => setInputValue(e.target.value)}
               onKeyPress={handleKeyPress}
               placeholder="Share your thoughts and seek wisdom..."
-              className="flex-1 bg-input border border-border text-foreground placeholder:text-muted-foreground focus:border-ring focus:ring-1 focus:ring-ring rounded-full px-3 sm:px-4 py-2 md:py-3 text-sm sm:text-base mobile-touch-target android-text-size"
+              className="w-full h-11 mobile-touch-target pr-12 rounded-xl bg-input border-border/50 text-foreground placeholder:text-muted-foreground focus:border-ring focus:ring-1 focus:ring-ring text-base android-text-size"
               autoComplete="off"
               autoCorrect="off"
               autoCapitalize="sentences"
               spellCheck="true"
             />
             
-            {/* Voice button - inline on desktop */}
-            <Button
-              onClick={handleVoiceInput}
-              variant="ghost"
-              size="icon"
-              className={`hidden md:flex border-0 text-muted-foreground hover:bg-accent hover:text-foreground transition-all duration-200 mobile-touch-target ${
-                isListening ? 'animate-pulse bg-accent' : ''
-              }`}
-            >
-              <Mic className="w-4 h-4" />
-            </Button>
-            
             <Button
               onClick={handleSendMessage}
               disabled={!inputValue.trim() || isLoading}
-              className="bg-primary text-primary-foreground hover:bg-primary/90 transition-all duration-200 rounded-full px-3 sm:px-4 md:px-6 font-medium mobile-touch-target"
+              size="icon"
+              className="absolute right-1 top-1/2 -translate-y-1/2 h-9 w-9 mobile-touch-target bg-primary text-primary-foreground hover:bg-primary/90 transition-all duration-200 rounded-lg"
             >
-              <Send className="w-3 h-3 sm:w-4 sm:h-4" />
+              <Send className="w-4 h-4" />
             </Button>
           </div>
         </div>

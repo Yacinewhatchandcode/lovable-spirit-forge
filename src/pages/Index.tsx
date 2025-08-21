@@ -4,51 +4,31 @@ import { ParticleField } from '@/components/ParticleField';
 
 const Index = () => {
   return (
-    <div className="min-h-screen bg-background relative overflow-hidden mobile-safe-area">
+    <div className="min-h-screen bg-background relative overflow-hidden mobile-safe-area flex flex-col">
       {/* Animated particle background */}
       <ParticleField />
       
-      <div className="relative z-10">
-        {/* Hero Section - Mobile optimized */}
-        <section className="min-h-[60vh] sm:min-h-[70vh] flex items-center px-4 sm:px-6">
+      <div className="relative z-10 flex-1 flex flex-col">
+        {/* Compact Hero Section - Mobile optimized */}
+        <section className="flex-shrink-0 flex items-center px-3 sm:px-6 py-6 sm:py-8">
           <div className="w-full">
-            <div className="text-center max-w-3xl mx-auto mb-8 sm:mb-12">
-              <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-gradient-wisdom mb-3 sm:mb-4 text-crisp android-text-size">
-                Spiritual Quest Companion
+            <div className="text-center max-w-3xl mx-auto">
+              <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-gradient-wisdom mb-2 sm:mb-3 text-crisp android-text-size">
+                Wisdom Companion
               </h1>
-              <p className="text-base sm:text-lg text-muted-foreground px-2 leading-relaxed">
-                A thoughtful AI guide for your journey of inner discovery
+              <p className="text-sm sm:text-base lg:text-lg text-muted-foreground px-2 leading-relaxed">
+                Ancient wisdom for modern seekers
               </p>
             </div>
           </div>
         </section>
 
-        {/* Chat Interface - Mobile first */}
-        <section className="py-6 sm:py-8 px-4 sm:px-6">
-          <div className="max-w-4xl mx-auto">
+        {/* Chat Interface - Takes remaining space */}
+        <section className="flex-1 flex flex-col px-3 sm:px-6 pb-4 sm:pb-8 min-h-0">
+          <div className="flex-1 flex flex-col max-w-4xl mx-auto w-full min-h-0">
             <SpiritualChat />
           </div>
         </section>
-
-        {/* Footer - Mobile optimized */}
-        <footer className="py-12 sm:py-16 px-4 sm:px-6 border-t border-wisdom-amber/20">
-          <div className="max-w-4xl mx-auto text-center">
-            <div className="mb-6 sm:mb-8">
-              <svg className="w-10 h-10 sm:w-12 sm:h-12 mx-auto mb-3 sm:mb-4 opacity-50" viewBox="0 0 100 100">
-                <circle cx="50" cy="50" r="35" fill="none" stroke="hsl(var(--wisdom-amber))" strokeWidth="1"/>
-                <circle cx="50" cy="50" r="6" fill="hsl(var(--wisdom-amber))"/>
-              </svg>
-            </div>
-            
-            <p className="text-wisdom-amber text-base sm:text-lg mb-3 sm:mb-4 px-2">
-              "The journey of a thousand miles begins with one step."
-            </p>
-            
-            <p className="text-xs sm:text-sm text-muted-foreground px-2">
-              Built for seekers, guided by wisdom, inspired by truth
-            </p>
-          </div>
-        </footer>
       </div>
     </div>
   );
