@@ -22,26 +22,34 @@ interface Message {
   };
 }
 
-// Function to get random content as fallback
-const getRandomContent = async () => {
+type HiddenWordData = NonNullable<Message['hiddenWord']>;
+
+const getRandomHiddenWord = async (): Promise<HiddenWordData | null> => {
   try {
     const { data, error } = await supabase
       .from('hidden_words')
-      .select('*');
-    
+      .select('id, text, addressee, part, number, section_title')
+      .limit(200);
+
     if (error) throw error;
-    
+
     if (data && data.length > 0) {
       const randomIndex = Math.floor(Math.random() * data.length);
-      const content = data[randomIndex];
-      return `"${content.text}"`;
+      const content = data[randomIndex] as any;
+      return {
+        id: content.id,
+        text: content.text,
+        addressee: content.addressee,
+        part: content.part,
+        number: content.number,
+        section_title: content.section_title ?? ''
+      };
     }
   } catch (error) {
-    console.error('Error fetching content:', error);
+    console.error('Error fetching random Hidden Word:', error);
   }
-  
-  // Ultimate fallback
-  return "I apologize, but I cannot provide a response at this moment. Please try again.";
+
+  return null;
 };
 
 export const Chat = () => {
@@ -131,14 +139,15 @@ export const Chat = () => {
     } catch (error) {
       console.error('Error sending message:', error);
 
-      // Fallback to content if API fails
-      const responseText = await getRandomContent();
+      // Fallback to a random Hidden Word if API fails
+      const randomHiddenWord = await getRandomHiddenWord();
       const aiMessage: Message = {
         id: (Date.now() + 1).toString(),
-        text: responseText,
+        text: randomHiddenWord ? "Sharing a passage for reflection." : "I apologize, but I cannot provide a response at this moment. Please try again.",
         isUser: false,
         timestamp: new Date(),
-        hasQuote: true
+        hasQuote: !!randomHiddenWord,
+        hiddenWord: randomHiddenWord || undefined
       };
 
       setMessages(prev => [...prev, aiMessage]);
