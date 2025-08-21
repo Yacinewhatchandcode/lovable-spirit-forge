@@ -8,60 +8,72 @@
 
 @layer base {
   :root {
-    /* ChatGPT-like color palette - Clean light theme */
-    --background: 0 0% 100%;
-    --foreground: 0 0% 15%;
+    /* Spiritual Quest - Warm cream/beige palette */
+    --background: 40 25% 97%;
+    --foreground: 30 15% 15%;
     
-    --muted: 0 0% 96%;
-    --muted-foreground: 0 0% 45%;
+    --muted: 35 20% 92%;
+    --muted-foreground: 30 10% 45%;
     
-    --popover: 0 0% 100%;
-    --popover-foreground: 0 0% 15%;
+    --popover: 40 25% 97%;
+    --popover-foreground: 30 15% 15%;
     
-    --card: 0 0% 100%;
-    --card-foreground: 0 0% 15%;
+    --card: 45 30% 98%;
+    --card-foreground: 30 15% 15%;
     
-    --border: 0 0% 90%;
-    --input: 0 0% 96%;
+    --border: 35 15% 85%;
+    --input: 40 20% 94%;
     
-    --primary: 142 76% 36%;
+    --primary: 75 45% 35%;
     --primary-foreground: 0 0% 100%;
     
-    --secondary: 0 0% 96%;
-    --secondary-foreground: 0 0% 15%;
+    --secondary: 35 20% 92%;
+    --secondary-foreground: 30 15% 15%;
     
-    --accent: 0 0% 94%;
-    --accent-foreground: 0 0% 15%;
+    --accent: 45 25% 90%;
+    --accent-foreground: 30 15% 15%;
     
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
     
-    --ring: 142 76% 36%;
+    --ring: 75 45% 35%;
     
-    --radius: 0.5rem;
+    --radius: 0.75rem;
+    
+    /* Spiritual Quest specific colors */
+    --wisdom-amber: 45 85% 60%;
+    --wisdom-amber-light: 50 90% 70%;
+    --wisdom-amber-dark: 40 80% 45%;
+    
+    --quest-slate: 200 15% 35%;
+    --quest-slate-light: 200 20% 65%;
+    --quest-slate-dark: 200 25% 25%;
+    
+    --insight-blue: 220 50% 65%;
+    --insight-blue-light: 220 60% 75%;
+    
+    /* Spiritual background */
+    --spiritual-bg: 40 30% 95%;
+    --spiritual-card: 45 35% 98%;
+    --spiritual-border: 40 20% 85%;
     
     /* Chat-optimized colors */
-    --chat-background: 0 0% 100%;
-    --chat-user-bg: 142 76% 36%;
+    --chat-background: 40 25% 97%;
+    --chat-user-bg: 75 45% 35%;
     --chat-user-text: 0 0% 100%;
-    --chat-assistant-bg: 0 0% 96%;
-    --chat-assistant-text: 0 0% 15%;
-    --chat-border: 0 0% 85%;
-    --chat-input-bg: 0 0% 100%;
+    --chat-assistant-bg: 35 20% 92%;
+    --chat-assistant-text: 30 15% 15%;
+    --chat-border: 35 15% 85%;
+    --chat-input-bg: 40 20% 94%;
     
-    /* Button colors */
-    --button-primary: 142 76% 36%;
-    --button-secondary: 0 0% 50%;
-    --button-hover: 142 76% 32%;
+    /* Enhanced shadows */
+    --shadow-sm: 0 1px 3px 0 rgb(139 69 19 / 0.1);
+    --shadow-md: 0 4px 12px -2px rgb(139 69 19 / 0.15);
+    --shadow-lg: 0 10px 25px -5px rgb(139 69 19 / 0.2);
     
-    /* Light shadows */
-    --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-    --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1);
-    --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1);
-    
-    /* Transitions */
-    --transition-fast: all 0.15s ease-out;
-    --transition-smooth: all 0.2s ease-out;
+    /* Smooth transitions */
+    --transition-fast: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     
     /* Sidebar colors */
     --sidebar-background: 222.2 84% 4.9%;
