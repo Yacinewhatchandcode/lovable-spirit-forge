@@ -6,6 +6,7 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Mic, Send, Sparkles, Heart } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
+import { Session } from '@supabase/supabase-js';
 
 interface Message {
   id: string;
@@ -21,6 +22,10 @@ interface Message {
     number: number;
     section_title: string;
   };
+}
+
+interface SpiritualChatProps {
+  session: Session;
 }
 
 // Function to get random wisdom quote as fallback
@@ -45,7 +50,7 @@ const getRandomWisdomQuote = async () => {
   return "The journey inward requires courage, patience, and an open heart. Trust in the process of your own unfolding.";
 };
 
-export const SpiritualChat = () => {
+export const SpiritualChat = ({ session }: SpiritualChatProps) => {
   const [messages, setMessages] = useState<Message[]>([
     {
       id: '1',
