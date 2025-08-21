@@ -6,8 +6,6 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Mic, Send, Sparkles, Heart } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
-import { Session } from '@supabase/supabase-js';
-
 interface Message {
   id: string;
   text: string;
@@ -22,10 +20,6 @@ interface Message {
     number: number;
     section_title: string;
   };
-}
-
-interface ChatProps {
-  session: Session;
 }
 
 // Function to get random content as fallback
@@ -50,7 +44,7 @@ const getRandomContent = async () => {
   return "I apologize, but I cannot provide a response at this moment. Please try again.";
 };
 
-export const Chat = ({ session }: ChatProps) => {
+export const Chat = () => {
   const [messages, setMessages] = useState<Message[]>([
     {
       id: '1',
