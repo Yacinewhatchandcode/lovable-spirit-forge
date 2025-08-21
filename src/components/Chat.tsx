@@ -301,13 +301,6 @@ export const Chat = () => {
                           <p className="text-amber-700 dark:text-amber-300 font-cinzel text-base sm:text-lg italic tracking-wide">
                             — The Hidden Words of Bahá'u'lláh
                           </p>
-                          
-                          {/* Elegant metadata with ancient styling */}
-                          <div className="text-center">
-                            <span className="inline-block px-4 py-2 text-sm text-amber-800 dark:text-amber-200 bg-amber-100/60 dark:bg-amber-900/40 rounded-lg border border-amber-300/50 dark:border-amber-600/50 font-cinzel tracking-wide">
-                              {(message.hiddenWord.part === 'arabic' ? 'Arabic' : 'Persian')} • Passage #{message.hiddenWord.number}
-                            </span>
-                          </div>
                         </div>
                       </div>
                     </div>
