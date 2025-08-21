@@ -270,6 +270,10 @@ export const Chat = () => {
                       <div className="relative text-center space-y-6">
                         {/* Title in ancient style */}
                         <div className="space-y-3">
+                          {/* Section Title with Spiritual Quest styling */}
+                          <h2 className="font-cinzel font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent text-lg sm:text-xl md:text-2xl mb-2">
+                            {message.hiddenWord.section_title}
+                          </h2>
                           <h3 className="font-papyrus text-xl sm:text-2xl md:text-3xl text-amber-800 dark:text-amber-200 tracking-wider drop-shadow-sm">
                             {message.hiddenWord.addressee}
                           </h3>
