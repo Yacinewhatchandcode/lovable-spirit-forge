@@ -157,34 +157,40 @@ serve(async (req) => {
       console.error('Error fetching Hidden Words:', dbError);
     }
 
-    const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${openRouterApiKey}`,
-        'Content-Type': 'application/json',
-        'HTTP-Referer': 'https://lovable.dev',
-        'X-Title': 'Spiritual Chat App',
-      },
-      body: JSON.stringify({
-        model: 'anthropic/claude-3-haiku',
-        messages: [
-          {
-            role: 'system',
-            content: `You are Spiritual Quest, a wise spiritual guide offering compassionate guidance and insights based on Bahá'í teachings and the Hidden Words. You speak with warmth, wisdom, and understanding, helping seekers on their spiritual journey.\n\n${relevantHiddenWord ? `A relevant passage from the Hidden Words will be shown after your response. Reference it naturally if relevant. Passage: (${relevantHiddenWord.addressee}, ${relevantHiddenWord.part} #${relevantHiddenWord.number}).` : ''}\n\nRespond with spiritual insight, empathy, and practical guidance. Keep responses meaningful but concise.`
-          },
-          ...history,
-          {
-            role: 'user',
-            content: message
-          }
-        ],
-        max_tokens: 400,
-      }),
-    });
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 20000);
+
+    let response: Response;
+    try {
+      response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${openRouterApiKey}`,
+          'Content-Type': 'application/json',
+          'HTTP-Referer': 'https://lovable.dev',
+          'X-Title': 'Spiritual Chat App',
+        },
+        body: JSON.stringify({
+          model: 'anthropic/claude-3.5-haiku',
+          messages: [
+            {
+              role: 'system',
+              content: `You are Spiritual Quest, a wise spiritual guide offering compassionate guidance and insights based on Bahá'í teachings and the Hidden Words. Speak with warmth, wisdom, and practicality.\n\nImportant: Do NOT quote Hidden Words passages verbatim. If relevant, briefly reference that a passage will be shown after your response. Keep answers concise, empathetic, and context-aware. ${relevantHiddenWord ? `A relevant passage will be displayed separately (Addressee: ${relevantHiddenWord.addressee}, ${relevantHiddenWord.part} #${relevantHiddenWord.number}).` : ''}`
+            },
+            ...history,
+            { role: 'user', content: message }
+          ],
+          max_tokens: 400,
+        }),
+        signal: controller.signal,
+      });
+    } finally {
+      clearTimeout(timeoutId);
+    }
 
     if (!response.ok) {
       const errorText = await response.text();
-      console.error('OpenRouter API error:', response.status, errorText);
+      console.error('OpenRouter API error:', response.status);
       return new Response(
         JSON.stringify({ error: `OpenRouter API error: ${response.status}` }),
         { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
