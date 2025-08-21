@@ -2,7 +2,7 @@ import { Session } from '@supabase/supabase-js';
 import { Navigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { supabase } from '@/integrations/supabase/client';
-import { SpiritualChat } from '@/components/SpiritualChat';
+import { Chat } from '@/components/Chat';
 import { ParticleField } from '@/components/ParticleField';
 import { useToast } from '@/hooks/use-toast';
 import { LogOut } from 'lucide-react';
@@ -59,10 +59,10 @@ const Index = ({ session }: IndexProps) => {
           <div className="w-full">
             <div className="text-center max-w-3xl mx-auto">
               <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-gradient-wisdom mb-2 sm:mb-3 text-crisp android-text-size">
-                Wisdom Companion
+                Chat Assistant
               </h1>
               <p className="text-sm sm:text-base lg:text-lg text-muted-foreground px-2 leading-relaxed">
-                Ancient wisdom for modern seekers
+                AI-powered conversation platform
               </p>
             </div>
           </div>
@@ -71,7 +71,7 @@ const Index = ({ session }: IndexProps) => {
         {/* Chat Interface - Takes remaining space */}
         <section className="flex-1 flex flex-col px-3 sm:px-6 pb-4 sm:pb-8 min-h-0">
           <div className="flex-1 flex flex-col max-w-4xl mx-auto w-full min-h-0">
-            <SpiritualChat session={session} />
+            <Chat session={session} />
           </div>
         </section>
       </div>

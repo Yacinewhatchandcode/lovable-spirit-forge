@@ -24,12 +24,12 @@ interface Message {
   };
 }
 
-interface SpiritualChatProps {
+interface ChatProps {
   session: Session;
 }
 
-// Function to get random wisdom quote as fallback
-const getRandomWisdomQuote = async () => {
+// Function to get random content as fallback
+const getRandomContent = async () => {
   try {
     const { data, error } = await supabase
       .from('hidden_words')
@@ -39,22 +39,22 @@ const getRandomWisdomQuote = async () => {
     
     if (data && data.length > 0) {
       const randomIndex = Math.floor(Math.random() * data.length);
-      const wisdomText = data[randomIndex];
-      return `"${wisdomText.text}" — Ancient Wisdom`;
+      const content = data[randomIndex];
+      return `"${content.text}"`;
     }
   } catch (error) {
-    console.error('Error fetching wisdom:', error);
+    console.error('Error fetching content:', error);
   }
   
   // Ultimate fallback
-  return "The journey inward requires courage, patience, and an open heart. Trust in the process of your own unfolding.";
+  return "I apologize, but I cannot provide a response at this moment. Please try again.";
 };
 
-export const SpiritualChat = ({ session }: SpiritualChatProps) => {
+export const Chat = ({ session }: ChatProps) => {
   const [messages, setMessages] = useState<Message[]>([
     {
       id: '1',
-      text: "Welcome, fellow seeker. I am here to offer gentle guidance drawing from timeless spiritual wisdom. How may I assist you on your journey of inner discovery today?",
+      text: "Hello! I'm here to help answer your questions and provide information. How can I assist you today?",
       isUser: false,
       timestamp: new Date(),
     }
@@ -132,13 +132,13 @@ export const SpiritualChat = ({ session }: SpiritualChatProps) => {
       }
 
       toast({
-        description: "Spiritual guidance received ✨",
+        description: "Response received",
       });
     } catch (error) {
       console.error('Error sending message:', error);
 
-      // Fallback to wisdom quote if API fails
-      const responseText = await getRandomWisdomQuote();
+      // Fallback to content if API fails
+      const responseText = await getRandomContent();
       const aiMessage: Message = {
         id: (Date.now() + 1).toString(),
         text: responseText,
@@ -150,7 +150,7 @@ export const SpiritualChat = ({ session }: SpiritualChatProps) => {
       setMessages(prev => [...prev, aiMessage]);
 
       toast({
-        description: "Using offline guidance mode",
+        description: "Using offline mode",
       });
     } finally {
       setIsLoading(false);
@@ -169,12 +169,12 @@ export const SpiritualChat = ({ session }: SpiritualChatProps) => {
       setIsListening(true);
       toast({
         title: "Voice Recognition",
-        description: "Listening... Please speak your spiritual question.",
+        description: "Listening... Please speak your question.",
       });
       
       setTimeout(() => {
         setIsListening(false);
-        setInputValue("How can I find inner peace in difficult times?");
+        setInputValue("How can I get help with this?");
         toast({
           title: "Voice Captured",
           description: "Your question has been received.",
@@ -199,10 +199,10 @@ export const SpiritualChat = ({ session }: SpiritualChatProps) => {
           </div>
           <div>
             <h2 className="text-lg md:text-xl font-semibold text-foreground">
-              Wisdom Companion
+              Chat Assistant
             </h2>
             <p className="text-xs md:text-sm text-muted-foreground">
-              Ancient wisdom for modern seekers
+              AI-powered conversations
             </p>
           </div>
         </div>
@@ -218,7 +218,7 @@ export const SpiritualChat = ({ session }: SpiritualChatProps) => {
                   <Sparkles className="text-primary text-2xl" />
                 </div>
                 <p className="text-muted-foreground text-sm sm:text-base">
-                  Welcome, fellow seeker. Share your thoughts and seek wisdom.
+                  Welcome! Share your questions and I'll help you find answers.
                 </p>
               </div>
             </div>
@@ -346,7 +346,7 @@ export const SpiritualChat = ({ session }: SpiritualChatProps) => {
               value={inputValue}
               onChange={(e) => setInputValue(e.target.value)}
               onKeyPress={handleKeyPress}
-              placeholder="Share your thoughts and seek wisdom..."
+              placeholder="Type your message here..."
               className="w-full h-11 mobile-touch-target pr-12 rounded-xl bg-input border-border/50 text-foreground placeholder:text-muted-foreground focus:border-ring focus:ring-1 focus:ring-ring text-base android-text-size"
               autoComplete="off"
               autoCorrect="off"
