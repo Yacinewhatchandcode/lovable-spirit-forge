@@ -9,7 +9,7 @@ const supabaseAnonKey = Deno.env.get('SUPABASE_ANON_KEY');
 const supabase = createClient(supabaseUrl!, supabaseAnonKey!);
 
 const corsHeaders = {
-  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Origin': 'https://lovable.dev',
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
 
@@ -22,7 +22,22 @@ serve(async (req) => {
   try {
     const { message, history = [], excludeIds = [] } = await req.json();
 
-    console.log('Received message:', message);
+    // Validate inputs
+    if (!message || typeof message !== 'string' || message.length > 2000) {
+      return new Response(
+        JSON.stringify({ error: 'Invalid message' }),
+        { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
+    // Validate excludeIds are UUIDs
+    const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+    if (excludeIds.some((id: any) => typeof id !== 'string' || !uuidRegex.test(id))) {
+      return new Response(
+        JSON.stringify({ error: 'Invalid excludeIds format' }),
+        { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
 
     if (!openRouterApiKey) {
       console.error('OpenRouter API key not found');
@@ -51,7 +66,6 @@ serve(async (req) => {
 
       if (directMatch.data && directMatch.data.length > 0) {
         relevantHiddenWord = directMatch.data[0];
-        console.log('Found direct text match:', relevantHiddenWord);
       } else {
         // 2) Build richer semantic terms from message
         const lowercaseMessage = message.toLowerCase();
@@ -118,7 +132,6 @@ serve(async (req) => {
             });
             scored.sort((a: any, b: any) => b.score - a.score);
             relevantHiddenWord = scored[0].hw;
-            console.log('Found semantic match (ranked):', relevantHiddenWord);
           }
         }
 
@@ -137,7 +150,6 @@ serve(async (req) => {
           if (randomQuotes && randomQuotes.length > 0) {
             const randomIndex = Math.floor(Math.random() * randomQuotes.length);
             relevantHiddenWord = randomQuotes[randomIndex];
-            console.log('Using meaningful random quote (no repeat):', relevantHiddenWord);
           }
         }
       }
@@ -181,8 +193,6 @@ serve(async (req) => {
     }
 
     const data = await response.json();
-    console.log('OpenRouter response:', data);
-
     const aiResponse = data.choices?.[0]?.message?.content || 'I apologize, but I cannot provide a response at this moment. Please try again.';
 
     return new Response(
