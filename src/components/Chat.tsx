@@ -143,7 +143,7 @@ export const Chat = () => {
       const randomHiddenWord = await getRandomHiddenWord();
       const aiMessage: Message = {
         id: (Date.now() + 1).toString(),
-        text: randomHiddenWord ? "Sharing a passage for reflection." : "I apologize, but I cannot provide a response at this moment. Please try again.",
+        text: randomHiddenWord ? "Let me share some spiritual wisdom that may offer guidance for your journey." : "I apologize, but I cannot provide a response at this moment. Please try again.",
         isUser: false,
         timestamp: new Date(),
         hasQuote: !!randomHiddenWord,

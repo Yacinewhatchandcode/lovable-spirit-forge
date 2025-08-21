@@ -9,7 +9,7 @@ const supabaseAnonKey = Deno.env.get('SUPABASE_ANON_KEY');
 const supabase = createClient(supabaseUrl!, supabaseAnonKey!);
 
 const corsHeaders = {
-  'Access-Control-Allow-Origin': 'https://lovable.dev',
+  'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
 
@@ -166,11 +166,11 @@ serve(async (req) => {
         'X-Title': 'Spiritual Chat App',
       },
       body: JSON.stringify({
-        model: 'openai/gpt-oss-20b:free',
+        model: 'anthropic/claude-3-haiku',
         messages: [
           {
             role: 'system',
-            content: `You are a wise spiritual guide offering compassionate guidance and insights based on Bahá'í teachings and the Hidden Words.\n\n${relevantHiddenWord ? `Do not quote the full passage verbatim. Instead, you may gently reference that a relevant passage exists; the UI will present it after your answer. Passage context: (${relevantHiddenWord.addressee}, ${relevantHiddenWord.part} #${relevantHiddenWord.number}).` : ''}\n\nKeep your response thoughtful, empathetic, concise, and meaningful.`
+            content: `You are Spiritual Quest, a wise spiritual guide offering compassionate guidance and insights based on Bahá'í teachings and the Hidden Words. You speak with warmth, wisdom, and understanding, helping seekers on their spiritual journey.\n\n${relevantHiddenWord ? `A relevant passage from the Hidden Words will be shown after your response. Reference it naturally if relevant. Passage: (${relevantHiddenWord.addressee}, ${relevantHiddenWord.part} #${relevantHiddenWord.number}).` : ''}\n\nRespond with spiritual insight, empathy, and practical guidance. Keep responses meaningful but concise.`
           },
           ...history,
           {
@@ -178,8 +178,7 @@ serve(async (req) => {
             content: message
           }
         ],
-        max_tokens: 500,
-        temperature: 0.8,
+        max_tokens: 400,
       }),
     });
 
