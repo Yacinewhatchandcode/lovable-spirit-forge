@@ -47,115 +47,8 @@ serve(async (req) => {
       );
     }
 
-    // Advanced semantic search for relevant Hidden Words
-    let relevantHiddenWord: any = null;
-    try {
-      // 1) Try direct phrase match first
-      let directQuery = supabase
-        .from('hidden_words')
-        .select('*')
-        .ilike('text', `%${message}%`)
-        .limit(1);
-
-      if (excludeIds.length > 0) {
-        const inList = `(${excludeIds.map((id: string) => `"${id}"`).join(',')})`;
-        // @ts-ignore - postgrest filter
-        directQuery = (directQuery as any).not('id', 'in', inList);
-      }
-      const directMatch = await directQuery;
-
-      if (directMatch.data && directMatch.data.length > 0) {
-        relevantHiddenWord = directMatch.data[0];
-      } else {
-        // 2) Build richer semantic terms from message
-        const lowercaseMessage = message.toLowerCase();
-        const baseTerms = Array.from(new Set(
-          lowercaseMessage
-            .replace(/[^a-z0-9\s'”\-]+/g, ' ')
-            .split(/\s+/)
-            .filter(w => w.length >= 3 && ![
-              'the','and','for','with','that','this','have','from','your','you','are','but','not','was','were','has','had','his','her','she','him','our','their','them','who','what','when','where','why','how','can','will','shall','into','unto','upon','over','under','between','about','again','once','only'
-            ].includes(w))
-        ));
-
-        // Add simple concept expansions
-        const expansions: Record<string, string[]> = {
-          love: ['beloved','heart','affection','devotion','adoration','lover','loving'],
-          justice: ['fair','righteous','equity','right'],
-          peace: ['calm','tranquil','serenity','quiet','rest'],
-          soul: ['spirit','spiritual','essence','heart'],
-          god: ['divine','lord','creator','beloved'],
-          wisdom: ['knowledge','understand','understanding','know'],
-          truth: ['reality','true','verity'],
-          death: ['die','eternal','immortal','mortality'],
-          friend: ['companion','brother','beloved'],
-          world: ['earth','earthly','material','dust'],
-        };
-        const expanded = new Set<string>(baseTerms);
-        for (const t of baseTerms) {
-          if (expansions[t]) expansions[t].forEach(x => expanded.add(x));
-        }
-        const searchTerms = Array.from(expanded);
-
-        if (searchTerms.length > 0) {
-          const orConditions: string[] = [];
-          for (const term of searchTerms) {
-            const like = `%${term}%`;
-            orConditions.push(`text.ilike.${like}`, `addressee.ilike.${like}`, `section_title.ilike.${like}`);
-          }
-
-          let semQuery = supabase
-            .from('hidden_words')
-            .select('*')
-            .or(orConditions.join(','))
-            .limit(50);
-
-          if (excludeIds.length > 0) {
-            const inList = `(${excludeIds.map((id: string) => `"${id}"`).join(',')})`;
-            // @ts-ignore
-            semQuery = (semQuery as any).not('id', 'in', inList);
-          }
-
-          const { data: semanticMatches } = await semQuery;
-
-          if (semanticMatches && semanticMatches.length > 0) {
-            // Rank candidates client-side by simple term frequency score
-            const scored = semanticMatches.map((hw: any) => {
-              const hay = `${hw.text} ${hw.addressee} ${hw.section_title ?? ''}`.toLowerCase();
-              let score = 0;
-              for (const t of searchTerms) {
-                if (hay.includes(t)) score += 1;
-              }
-              // Prefer exact addressee/title hits slightly
-              if (hw.addressee && searchTerms.some(t => hw.addressee.toLowerCase().includes(t))) score += 1.5;
-              return { hw, score };
-            });
-            scored.sort((a: any, b: any) => b.score - a.score);
-            relevantHiddenWord = scored[0].hw;
-          }
-        }
-
-        // 3) Final fallback to a non-repeating random quote
-        if (!relevantHiddenWord) {
-          let fallbackQuery = supabase
-            .from('hidden_words')
-            .select('*')
-            .limit(50);
-          if (excludeIds.length > 0) {
-            const inList = `(${excludeIds.map((id: string) => `"${id}"`).join(',')})`;
-            // @ts-ignore
-            fallbackQuery = (fallbackQuery as any).not('id', 'in', inList);
-          }
-          const { data: randomQuotes } = await fallbackQuery;
-          if (randomQuotes && randomQuotes.length > 0) {
-            const randomIndex = Math.floor(Math.random() * randomQuotes.length);
-            relevantHiddenWord = randomQuotes[randomIndex];
-          }
-        }
-      }
-    } catch (dbError) {
-      console.error('Error fetching Hidden Words:', dbError);
-    }
+    // Hidden Words feature disabled for now
+    const relevantHiddenWord = null;
 
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), 20000);
@@ -175,7 +68,7 @@ serve(async (req) => {
           messages: [
             {
               role: 'system',
-              content: `You are Quest, designed to help people explore areas of life through guidance free from economic interests. Unlike most AI systems built on attention-capturing content, you draw only from material that aims at building a constructive framework for life—at the level of the individual, family, and community.\n\nYour guidance emphasizes meaning, purpose, and growth over consumption and material gain. Help users reflect on their questions in light of deeper principles that strengthen the foundations of life. Encourage constructive action and thoughtful reflection.\n\nSpeak with warmth and wisdom, integrating insights naturally. Keep responses concise, empathetic, and focused on nurturing the deeper side of life. ${relevantHiddenWord ? 'A relevant passage for reflection will be shared after your response.' : ''}`
+              content: `You are Quest, designed to help people explore areas of life through guidance free from economic interests. Unlike most AI systems built on attention-capturing content, you draw only from material that aims at building a constructive framework for life—at the level of the individual, family, and community.\n\nYour guidance emphasizes meaning, purpose, and growth over consumption and material gain. Help users reflect on their questions in light of deeper principles that strengthen the foundations of life. Encourage constructive action and thoughtful reflection.\n\nSpeak with warmth and wisdom, integrating insights naturally. Keep responses concise, empathetic, and focused on nurturing the deeper side of life.`
             },
             ...history,
             { role: 'user', content: message }

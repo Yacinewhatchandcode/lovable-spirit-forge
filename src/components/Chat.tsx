@@ -252,51 +252,6 @@ export const Chat = () => {
                 </div>
               </div>
 
-              {/* "It reminds me of" transition and Hidden Words Quote */}
-              {!message.isUser && message.hasQuote && message.hiddenWord && (
-                <div className="space-y-6">
-                  {/* "It reminds me of" transition */}
-                  <div className="flex justify-center">
-                    <div className="text-center px-4 py-2 bg-primary/5 rounded-full border border-primary/20">
-                      <p className="text-sm text-primary/80 font-serif italic">
-                        It reminds me of...
-                      </p>
-                    </div>
-                  </div>
-
-                  {/* Beautiful Hidden Words Quote in papyrus style */}
-                  <div className="flex justify-center px-2 sm:px-4">
-                    <div className="bg-gradient-to-br from-amber-50/90 to-yellow-50/90 dark:from-amber-950/30 dark:to-yellow-950/30 backdrop-blur-sm border-2 border-amber-200/50 dark:border-amber-700/50 rounded-xl p-6 sm:p-8 md:p-10 max-w-2xl mx-auto shadow-lg relative overflow-hidden">
-                      {/* Parchment texture overlay */}
-                      <div className="absolute inset-0 bg-gradient-to-br from-transparent via-amber-100/20 to-amber-200/20 dark:from-transparent dark:via-amber-900/20 dark:to-amber-800/20 pointer-events-none"></div>
-                      
-                      {/* Decorative corners */}
-                      <div className="absolute top-2 left-2 w-4 h-4 border-l-2 border-t-2 border-amber-300/60 dark:border-amber-600/60"></div>
-                      <div className="absolute top-2 right-2 w-4 h-4 border-r-2 border-t-2 border-amber-300/60 dark:border-amber-600/60"></div>
-                      <div className="absolute bottom-2 left-2 w-4 h-4 border-l-2 border-b-2 border-amber-300/60 dark:border-amber-600/60"></div>
-                      <div className="absolute bottom-2 right-2 w-4 h-4 border-r-2 border-b-2 border-amber-300/60 dark:border-amber-600/60"></div>
-                      
-                      <div className="relative text-center space-y-6">
-                        {/* Title in ancient style */}
-                        <div className="space-y-3">
-                          <h3 className="font-papyrus text-xl sm:text-2xl md:text-3xl text-amber-800 dark:text-amber-200 tracking-wider drop-shadow-sm">
-                            {message.hiddenWord.addressee}
-                          </h3>
-                          <div className="w-16 sm:w-20 h-0.5 bg-gradient-to-r from-transparent via-amber-600/60 to-transparent mx-auto"></div>
-                        </div>
-
-                        {/* Quote in papyrus style */}
-                        <blockquote className="font-papyrus text-amber-900 dark:text-amber-100 text-lg sm:text-xl md:text-2xl leading-relaxed tracking-wide font-normal relative">
-                          <span className="text-3xl text-amber-700 dark:text-amber-300 absolute -left-2 -top-2">"</span>
-                          {message.hiddenWord.text}
-                          <span className="text-3xl text-amber-700 dark:text-amber-300 absolute -right-1 -bottom-3">"</span>
-                        </blockquote>
-
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              )}
             </div>
           ))}
           
