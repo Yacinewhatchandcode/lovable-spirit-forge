@@ -292,12 +292,6 @@ export const Chat = () => {
                           <span className="text-3xl text-amber-700 dark:text-amber-300 absolute -right-1 -bottom-3">"</span>
                         </blockquote>
 
-                        {/* Source attribution in ancient style */}
-                        <div className="space-y-3">
-                          <p className="text-amber-700 dark:text-amber-300 font-cinzel text-base sm:text-lg italic tracking-wide">
-                            — The Hidden Words of Bahá'u'lláh
-                          </p>
-                        </div>
                       </div>
                     </div>
                   </div>
