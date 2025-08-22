@@ -4,12 +4,15 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.55.0';
 
 const openRouterApiKey = Deno.env.get('OPENROUTER_API_KEY');
 const supabaseUrl = Deno.env.get('SUPABASE_URL');
-const supabaseAnonKey = Deno.env.get('SUPABASE_ANON_KEY');
+const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY');
 
-const supabase = createClient(supabaseUrl!, supabaseAnonKey!);
+const supabase = createClient(supabaseUrl!, supabaseServiceKey!);
+
+// Rate limiting storage (in-memory for this function instance)
+const rateLimitMap = new Map<string, { count: number; resetTime: number }>();
 
 const corsHeaders = {
-  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Origin': 'https://skwkufybtzvvigkgnxbz.supabase.co',
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
 
@@ -20,7 +23,48 @@ serve(async (req) => {
   }
 
   try {
-    const { message, history = [], excludeIds = [] } = await req.json();
+    // Authentication check
+    const authHeader = req.headers.get('authorization');
+    if (!authHeader) {
+      return new Response(
+        JSON.stringify({ error: 'Authentication required' }),
+        { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
+    const token = authHeader.replace('Bearer ', '');
+    const { data: { user }, error: authError } = await supabase.auth.getUser(token);
+    
+    if (authError || !user) {
+      return new Response(
+        JSON.stringify({ error: 'Invalid authentication' }),
+        { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
+    // Rate limiting per user (10 requests per minute)
+    const userId = user.id;
+    const now = Date.now();
+    const userRateLimit = rateLimitMap.get(userId);
+    
+    if (userRateLimit) {
+      if (now < userRateLimit.resetTime) {
+        if (userRateLimit.count >= 10) {
+          return new Response(
+            JSON.stringify({ error: 'Rate limit exceeded. Please wait before sending another message.' }),
+            { status: 429, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+          );
+        }
+        userRateLimit.count++;
+      } else {
+        // Reset the counter
+        rateLimitMap.set(userId, { count: 1, resetTime: now + 60000 });
+      }
+    } else {
+      rateLimitMap.set(userId, { count: 1, resetTime: now + 60000 });
+    }
+
+    const { message, history = [] } = await req.json();
 
     // Validate inputs
     if (!message || typeof message !== 'string' || message.length > 2000) {
@@ -30,11 +74,10 @@ serve(async (req) => {
       );
     }
 
-    // Validate excludeIds are UUIDs
-    const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
-    if (excludeIds.some((id: any) => typeof id !== 'string' || !uuidRegex.test(id))) {
+    // Validate history array length and structure
+    if (!Array.isArray(history) || history.length > 20) {
       return new Response(
-        JSON.stringify({ error: 'Invalid excludeIds format' }),
+        JSON.stringify({ error: 'Invalid conversation history' }),
         { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
