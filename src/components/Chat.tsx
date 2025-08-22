@@ -56,7 +56,7 @@ export const Chat = () => {
   const [messages, setMessages] = useState<Message[]>([
     {
       id: '1',
-      text: "Hello! I'm here to help answer your questions and provide information. How can I assist you today?",
+      text: "Welcome to Quest. I'm here to help you explore areas of life through guidance that emphasizes meaning, purpose, and growth. Rather than focusing on material objectives, I draw from sources that aim to build a constructive framework for life—at the level of the individual, family, and community. How can I guide your reflection today?",
       isUser: false,
       timestamp: new Date(),
     }
@@ -202,10 +202,10 @@ export const Chat = () => {
           </div>
           <div>
             <h2 className="text-lg md:text-xl font-semibold text-foreground">
-              Chat Assistant
+              Quest
             </h2>
             <p className="text-xs md:text-sm text-muted-foreground">
-              AI-powered conversations
+              Guidance for meaningful living
             </p>
           </div>
         </div>
@@ -221,7 +221,7 @@ export const Chat = () => {
                   <Sparkles className="text-primary text-2xl" />
                 </div>
                 <p className="text-muted-foreground text-sm sm:text-base">
-                  Welcome! Share your questions and I'll help you find answers.
+                  Quest helps you explore life through guidance that emphasizes meaning, purpose, and growth. How can I guide your reflection today?
                 </p>
               </div>
             </div>
