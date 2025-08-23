@@ -12,8 +12,9 @@ const supabase = createClient(supabaseUrl!, supabaseServiceKey!);
 const rateLimitMap = new Map<string, { count: number; resetTime: number }>();
 
 const corsHeaders = {
-  'Access-Control-Allow-Origin': 'https://skwkufybtzvvigkgnxbz.supabase.co',
+  'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+  'Access-Control-Allow-Methods': 'POST, OPTIONS',
 };
 
 serve(async (req) => {
