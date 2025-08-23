@@ -133,15 +133,9 @@ export const Chat = () => {
         text: data.response || "I apologize, but I cannot provide a response at this moment. Please try again.",
         isUser: false,
         timestamp: new Date(),
-        hasQuote: !!data.hiddenWord,
-        hiddenWord: data.hiddenWord || undefined
       };
 
       setMessages(prev => [...prev, aiMessage]);
-
-      if (aiMessage.hiddenWord?.id) {
-        setUsedHiddenWordIds(prev => [...prev, aiMessage.hiddenWord!.id]);
-      }
 
       toast({
         description: "Response received",
@@ -149,21 +143,18 @@ export const Chat = () => {
     } catch (error) {
       console.error('Error sending message:', error);
 
-      // Fallback to a random Hidden Word if API fails
-      const randomHiddenWord = await getRandomHiddenWord();
       const aiMessage: Message = {
         id: (Date.now() + 1).toString(),
-        text: randomHiddenWord ? "Let me share some spiritual wisdom that may offer guidance for your journey." : "I apologize, but I cannot provide a response at this moment. Please try again.",
+        text: "I apologize, but I cannot provide a response at this moment. Please try again.",
         isUser: false,
         timestamp: new Date(),
-        hasQuote: !!randomHiddenWord,
-        hiddenWord: randomHiddenWord || undefined
       };
 
       setMessages(prev => [...prev, aiMessage]);
 
       toast({
-        description: "Using offline mode",
+        description: "Connection error. Please try again.",
+        variant: "destructive",
       });
     } finally {
       setIsLoading(false);
