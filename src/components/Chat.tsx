@@ -103,18 +103,8 @@ export const Chat = () => {
         content: m.text,
       }));
 
-      // Get the current session for authentication
-      const { data: { session } } = await supabase.auth.getSession();
-      
-      if (!session?.access_token) {
-        throw new Error('Authentication required. Please sign in to continue.');
-      }
-
-      // Call OpenRouter via Supabase Edge Function with history and authentication
+      // Call OpenRouter via Supabase Edge Function with history
       const { data, error } = await supabase.functions.invoke('chat-with-openrouter', {
-        headers: {
-          Authorization: `Bearer ${session.access_token}`
-        },
         body: { message: messageText, history: historyPayload }
       });
 

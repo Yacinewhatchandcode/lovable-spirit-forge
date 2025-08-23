@@ -23,47 +23,6 @@ serve(async (req) => {
   }
 
   try {
-    // Authentication check
-    const authHeader = req.headers.get('authorization');
-    if (!authHeader) {
-      return new Response(
-        JSON.stringify({ error: 'Authentication required' }),
-        { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-      );
-    }
-
-    const token = authHeader.replace('Bearer ', '');
-    const { data: { user }, error: authError } = await supabase.auth.getUser(token);
-    
-    if (authError || !user) {
-      return new Response(
-        JSON.stringify({ error: 'Invalid authentication' }),
-        { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-      );
-    }
-
-    // Rate limiting per user (10 requests per minute)
-    const userId = user.id;
-    const now = Date.now();
-    const userRateLimit = rateLimitMap.get(userId);
-    
-    if (userRateLimit) {
-      if (now < userRateLimit.resetTime) {
-        if (userRateLimit.count >= 10) {
-          return new Response(
-            JSON.stringify({ error: 'Rate limit exceeded. Please wait before sending another message.' }),
-            { status: 429, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-          );
-        }
-        userRateLimit.count++;
-      } else {
-        // Reset the counter
-        rateLimitMap.set(userId, { count: 1, resetTime: now + 60000 });
-      }
-    } else {
-      rateLimitMap.set(userId, { count: 1, resetTime: now + 60000 });
-    }
-
     const { message, history = [] } = await req.json();
 
     // Validate inputs
