@@ -17,8 +17,10 @@ const Index = () => {
       </div>
 
       {/* Main Chat Container */}
-      <div className="relative z-10 flex-1 container mx-auto px-4 pb-6 flex flex-col min-h-0">
-        <Chat />
+      <div className="relative z-10 flex-1 flex items-center justify-center p-4">
+        <div className="w-full max-w-4xl h-[calc(100vh-200px)] bg-card/50 backdrop-blur-sm border border-border/50 shadow-lg rounded-2xl overflow-hidden">
+          <Chat />
+        </div>
       </div>
     </div>
   );
