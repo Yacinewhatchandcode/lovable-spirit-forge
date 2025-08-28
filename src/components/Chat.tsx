@@ -299,14 +299,6 @@ export const Chat = () => {
               <Send className="w-4 h-4" />
             </Button>
           </div>
-          
-<<<<<<< HEAD
-          {mode === 'perspective' && (
-            <div className="mt-2 text-sm text-muted-foreground flex items-center gap-2">
-              <Search className="w-4 h-4" />
-              Mode: Perspective
-            </div>
-          )}
         </div>
       </div>
     </div>
