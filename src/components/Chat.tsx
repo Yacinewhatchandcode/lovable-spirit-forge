@@ -163,12 +163,8 @@ export const Chat = () => {
         content: m.text,
       }));
 
-      const systemInstructions: ChatHistoryMessage = {
-        role: 'system',
-        content: `You are a spiritual guide who answers by weaving together passages from the Writings and timeless wisdom from literature. Follow these rules strictly:\n1) Organize the response into clear topics using markdown headings (###).\n2) In each topic, include at least two passages from the Writings. Wrap every word from the Writings in bold markdown. Do not use quotation marks. Do not name or cite sources or authors.\n3) In each topic, add one concise idea from a philosopher or writer. Wrap those words in italic markdown. Do not identify the thinker. Do not use quotation marks.\n4) Do not include citations, footnotes, brackets, or any references.\n5) Do not use the word Bahá’í anywhere in the answer.\n6) Keep language simple, kind, and easy to understand.\n7) If the question cannot be answered from the Writings, respond with: There is no direct statement in the Writings on this matter.\n8) Output only the final formatted answer.`
-      };
-
-      const enhancedHistory: ChatHistoryMessage[] = [systemInstructions, ...historyPayload];
+      // Remove old system prompt - let backend handle mode-specific prompts
+      const enhancedHistory: ChatHistoryMessage[] = historyPayload;
 
       // Call OpenRouter via Supabase Edge Function with history, mode, and admin status
       const { data, error } = await supabase.functions.invoke('chat-with-openrouter', {
