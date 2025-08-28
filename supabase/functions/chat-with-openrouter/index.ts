@@ -24,7 +24,7 @@ serve(async (req) => {
   }
 
   try {
-    const { message, history = [], mode = 'insights', admin = false } = await req.json();
+    const { message, history = [], mode = 'insights', isAdmin = false } = await req.json();
 
     // Validate inputs
     if (!message || typeof message !== 'string' || message.length > 2000) {
@@ -72,19 +72,19 @@ serve(async (req) => {
               content: `You are a spiritual guide. Follow these rules:
 — Keep language simple, kind, easy to understand.
 — If the question cannot be answered from the Writings, respond with: There is no direct statement in the Writings on this matter.
-— Do not include citations, names, or sources in user-facing text. Do not use the word Bahá’í anywhere.
+${isAdmin ? '— Include source citations in square brackets [Source: Book Name, Page/Paragraph]' : '— Do not include citations, names, or sources in user-facing text. Do not use the word Bahá\'í anywhere.'}
 
 When mode is "insights":
 — Return only passages from the Writings, at least two per topic, organized with markdown headings (###).
 — Wrap every word from the Writings in bold markdown.
-— Add one short literary line per topic wrapped in italics.
+${isAdmin ? '— Include source citation in square brackets after each passage.' : '— Add one short literary line per topic wrapped in italics.'}
 
 When mode is "perspective":
 — Produce a short synthesis in clear sections using only the most recent Insights content in the conversation. Do not include quotations or sources.
 — If there is no prior Insights content in history, first infer the necessary Insights silently and then produce the synthesis.`
             },
             ...history,
-            { role: 'user', content: `Mode: ${mode}. Admin: ${admin}. User message: ${message}` }
+            { role: 'user', content: `Mode: ${mode}. Admin: ${isAdmin}. User message: ${message}` }
           ],
           max_tokens: 1000,
         }),

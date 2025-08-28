@@ -2,7 +2,9 @@ import { useState, useRef, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { Send, Sparkles, Search } from 'lucide-react';
+import { Input } from '@/components/ui/input';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Send, Sparkles, Search, Settings, ChevronDown } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
@@ -65,7 +67,13 @@ export const Chat = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [mode, setMode] = useState<'insights' | 'perspective'>('insights');
   const [usedHiddenWordIds, setUsedHiddenWordIds] = useState<string[]>([]);
+  const [isAdmin, setIsAdmin] = useState(false);
+  const [adminPassword, setAdminPassword] = useState('');
+  const [showAdminDialog, setShowAdminDialog] = useState(false);
   const scrollAreaRef = useRef<HTMLDivElement>(null);
+  const [showScrollToBottom, setShowScrollToBottom] = useState(false);
+
+  const ADMIN_PASSWORD = 'spiritguide2024'; // Hardcoded password
 
   const scrollToBottom = () => {
     if (scrollAreaRef.current) {
@@ -74,6 +82,49 @@ export const Chat = () => {
         scrollContainer.scrollTop = scrollContainer.scrollHeight;
       }
     }
+  };
+
+  const handleScroll = () => {
+    if (scrollAreaRef.current) {
+      const scrollContainer = scrollAreaRef.current.querySelector('[data-radix-scroll-area-viewport]');
+      if (scrollContainer) {
+        const isNearBottom = scrollContainer.scrollTop + scrollContainer.clientHeight >= scrollContainer.scrollHeight - 100;
+        setShowScrollToBottom(!isNearBottom);
+      }
+    }
+  };
+
+  // Check for admin mode on component mount
+  useEffect(() => {
+    const adminMode = localStorage.getItem('spiritguide-admin-mode');
+    if (adminMode === 'true') {
+      setIsAdmin(true);
+    }
+  }, []);
+
+  // Add scroll event listener
+  useEffect(() => {
+    const scrollContainer = scrollAreaRef.current?.querySelector('[data-radix-scroll-area-viewport]');
+    if (scrollContainer) {
+      scrollContainer.addEventListener('scroll', handleScroll);
+      return () => scrollContainer.removeEventListener('scroll', handleScroll);
+    }
+  }, []);
+
+  const handleAdminLogin = () => {
+    if (adminPassword === ADMIN_PASSWORD) {
+      setIsAdmin(true);
+      localStorage.setItem('spiritguide-admin-mode', 'true');
+      setShowAdminDialog(false);
+      setAdminPassword('');
+    } else {
+      alert('Incorrect password');
+    }
+  };
+
+  const handleAdminLogout = () => {
+    setIsAdmin(false);
+    localStorage.removeItem('spiritguide-admin-mode');
   };
 
   useEffect(() => {
@@ -119,9 +170,9 @@ export const Chat = () => {
 
       const enhancedHistory: ChatHistoryMessage[] = [systemInstructions, ...historyPayload];
 
-      // Call OpenRouter via Supabase Edge Function with history and mode
+      // Call OpenRouter via Supabase Edge Function with history, mode, and admin status
       const { data, error } = await supabase.functions.invoke('chat-with-openrouter', {
-        body: { message: messageText, history: enhancedHistory, mode }
+        body: { message: messageText, history: enhancedHistory, mode, isAdmin }
       });
 
       if (error) {
@@ -182,13 +233,70 @@ export const Chat = () => {
           <button
             onClick={() => setMode(prev => prev === 'insights' ? 'perspective' : 'insights')}
             className={`text-sm md:text-base px-3 md:px-4 py-1.5 rounded-full border transition-colors mobile-touch-target ${
-              mode === 'perspective' 
-                ? 'bg-primary text-primary-foreground border-primary' 
+              mode === 'perspective'
+                ? 'bg-primary text-primary-foreground border-primary'
                 : 'bg-background text-muted-foreground border-border hover:bg-muted'
             }`}
           >
             {mode === 'insights' ? 'Mode: Insights' : 'Mode: Perspective'}
           </button>
+
+          <Dialog open={showAdminDialog} onOpenChange={setShowAdminDialog}>
+            <DialogTrigger asChild>
+              <Button
+                variant="outline"
+                size="icon"
+                className={`w-8 h-8 ${isAdmin ? 'bg-red-100 border-red-300' : ''}`}
+                title={isAdmin ? 'Admin Mode Active' : 'Admin Settings'}
+              >
+                <Settings className={`w-4 h-4 ${isAdmin ? 'text-red-600' : ''}`} />
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="sm:max-w-md">
+              <DialogHeader>
+                <DialogTitle>
+                  {isAdmin ? 'Admin Mode Active' : 'Admin Access'}
+                </DialogTitle>
+              </DialogHeader>
+              {isAdmin ? (
+                <div className="space-y-4">
+                  <p className="text-sm text-muted-foreground">
+                    You are currently in Admin Mode. Sources will be displayed in Insights.
+                  </p>
+                  <Button
+                    onClick={handleAdminLogout}
+                    variant="destructive"
+                    className="w-full"
+                  >
+                    Logout from Admin Mode
+                  </Button>
+                </div>
+              ) : (
+                <div className="space-y-4">
+                  <p className="text-sm text-muted-foreground">
+                    Enter admin password to access source citations.
+                  </p>
+                  <Input
+                    type="password"
+                    placeholder="Enter password"
+                    value={adminPassword}
+                    onChange={(e) => setAdminPassword(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter') {
+                        handleAdminLogin();
+                      }
+                    }}
+                  />
+                  <Button
+                    onClick={handleAdminLogin}
+                    className="w-full"
+                  >
+                    Login
+                  </Button>
+                </div>
+              )}
+            </DialogContent>
+          </Dialog>
         </div>
       </div>
 
@@ -234,6 +342,19 @@ export const Chat = () => {
                     <span className="text-xs text-muted-foreground">
                       {message.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                     </span>
+                    {!message.isUser && (
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => {
+                          navigator.clipboard.writeText(message.text);
+                          // Could add a toast notification here
+                        }}
+                        className="text-xs"
+                      >
+                        Copy
+                      </Button>
+                    )}
                   </div>
                 </div>
               </div>
@@ -264,6 +385,17 @@ export const Chat = () => {
           )}
         </div>
       </ScrollArea>
+
+      {/* Floating Scroll to Bottom Button */}
+      {showScrollToBottom && (
+        <Button
+          onClick={scrollToBottom}
+          className="fixed bottom-24 right-4 z-50 rounded-full w-12 h-12 shadow-lg bg-primary hover:bg-primary/90 transition-all duration-200"
+          size="icon"
+        >
+          <ChevronDown className="w-5 h-5" />
+        </Button>
+      )}
 
       {/* Input */}
       <div className="sticky bottom-0 z-20 border-t border-border p-4 bg-background mobile-safe-area">
