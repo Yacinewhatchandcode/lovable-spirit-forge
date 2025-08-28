@@ -72,6 +72,7 @@ export const Chat = () => {
   const [showAdminDialog, setShowAdminDialog] = useState(false);
   const scrollAreaRef = useRef<HTMLDivElement>(null);
   const [showScrollToBottom, setShowScrollToBottom] = useState(false);
+  const [isRegenerating, setIsRegenerating] = useState(false);
 
 
   const ADMIN_PASSWORD = 'spiritguide2024'; // Hardcoded password
@@ -126,6 +127,75 @@ export const Chat = () => {
   const handleAdminLogout = () => {
     setIsAdmin(false);
     localStorage.removeItem('spiritguide-admin-mode');
+  };
+
+  const regenerateConversationForMode = async (newMode: 'insights' | 'perspective') => {
+    if (messages.length <= 1 || isRegenerating) return; // Only regenerate if there are actual exchanges
+
+    setIsRegenerating(true);
+
+    try {
+      const regeneratedMessages: Message[] = [messages[0]]; // Keep the initial welcome message
+
+      // Process each user message and regenerate AI responses
+      for (let i = 1; i < messages.length; i++) {
+        const currentMessage = messages[i];
+
+        if (currentMessage.isUser) {
+          regeneratedMessages.push(currentMessage); // Keep user messages as-is
+
+          // Find the next AI message after this user message
+          const nextAiMessage = messages.slice(i + 1).find(msg => !msg.isUser);
+          if (nextAiMessage) {
+            // Regenerate the AI response with the new mode
+            const userMessageText = currentMessage.text;
+
+            // Build conversation history up to this point
+            type ChatRole = 'user' | 'assistant' | 'system';
+            type ChatHistoryMessage = { role: ChatRole; content: string };
+
+            const historyPayload: ChatHistoryMessage[] = regeneratedMessages
+              .filter(msg => msg.id !== messages[0].id) // Exclude welcome message
+              .map(m => ({
+                role: m.isUser ? 'user' : 'assistant',
+                content: m.text,
+              }));
+
+            // Remove old system prompt - let backend handle mode-specific prompts
+            const enhancedHistory: ChatHistoryMessage[] = historyPayload;
+
+            // Generate new response with the target mode
+            const { data, error } = await supabase.functions.invoke('chat-with-openrouter', {
+              body: {
+                message: userMessageText,
+                history: enhancedHistory,
+                mode: newMode,
+                isAdmin
+              }
+            });
+
+            if (!error && data?.response) {
+              const newAiMessage: Message = {
+                id: nextAiMessage.id, // Keep the same ID to maintain conversation flow
+                text: data.response,
+                isUser: false,
+                timestamp: nextAiMessage.timestamp, // Keep original timestamp
+              };
+              regeneratedMessages.push(newAiMessage);
+            } else {
+              // Keep the original message if regeneration fails
+              regeneratedMessages.push(nextAiMessage);
+            }
+          }
+        }
+      }
+
+      setMessages(regeneratedMessages);
+    } catch (error) {
+      console.error('Error regenerating conversation:', error);
+    } finally {
+      setIsRegenerating(false);
+    }
   };
 
 
@@ -230,14 +300,19 @@ export const Chat = () => {
         <div className="flex items-center space-x-2">
           <Search className="w-4 h-4 text-muted-foreground hidden sm:block" />
           <button
-            onClick={() => setMode(prev => prev === 'insights' ? 'perspective' : 'insights')}
+            onClick={() => {
+              const newMode = mode === 'insights' ? 'perspective' : 'insights';
+              setMode(newMode);
+              regenerateConversationForMode(newMode);
+            }}
+            disabled={isRegenerating}
             className={`text-sm md:text-base px-3 md:px-4 py-1.5 rounded-full border transition-colors mobile-touch-target ${
               mode === 'perspective'
                 ? 'bg-primary text-primary-foreground border-primary'
                 : 'bg-background text-muted-foreground border-border hover:bg-muted'
-            }`}
+            } ${isRegenerating ? 'opacity-50 cursor-not-allowed' : ''}`}
           >
-            {mode === 'insights' ? 'Mode: Insights' : 'Mode: Perspective'}
+            {isRegenerating ? 'Regenerating...' : (mode === 'insights' ? 'Mode: Insights' : 'Mode: Perspective')}
           </button>
 
           <Dialog open={showAdminDialog} onOpenChange={setShowAdminDialog}>
