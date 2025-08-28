@@ -72,7 +72,7 @@ export const Chat = () => {
   const [showAdminDialog, setShowAdminDialog] = useState(false);
   const scrollAreaRef = useRef<HTMLDivElement>(null);
   const [showScrollToBottom, setShowScrollToBottom] = useState(false);
-  const [isGeneratingPerspective, setIsGeneratingPerspective] = useState(false);
+
 
   const ADMIN_PASSWORD = 'spiritguide2024'; // Hardcoded password
 
@@ -128,59 +128,7 @@ export const Chat = () => {
     localStorage.removeItem('spiritguide-admin-mode');
   };
 
-  const generatePerspectiveFromInsights = async () => {
-    const lastAssistantMessage = [...messages].reverse().find(m => !m.isUser);
-    if (!lastAssistantMessage || isGeneratingPerspective) return;
 
-    setIsGeneratingPerspective(true);
-
-    try {
-      // Build conversation history including the insights
-      type ChatRole = 'user' | 'assistant' | 'system';
-      type ChatHistoryMessage = { role: ChatRole; content: string };
-
-      const historyPayload: ChatHistoryMessage[] = messages.slice(-8).map(m => ({
-        role: m.isUser ? 'user' : 'assistant',
-        content: m.text,
-      }));
-
-      // Add the last insights message as context
-      const perspectiveContext = [
-        ...historyPayload,
-        {
-          role: 'user' as ChatRole,
-          content: `Based on the insights above, provide a perspective summary addressing me directly as a friend, with a title and one profound sentence.`
-        }
-      ];
-
-      const { data, error } = await supabase.functions.invoke('chat-with-openrouter', {
-        body: {
-          message: `Provide a perspective summary of the insights, addressing me directly as a friend with a title and one profound sentence.`,
-          history: perspectiveContext,
-          mode: 'perspective',
-          isAdmin
-        }
-      });
-
-      if (error) {
-        console.error('Perspective generation error:', error);
-        return;
-      }
-
-      const perspectiveMessage: Message = {
-        id: (Date.now() + 1).toString(),
-        text: data.response || 'I apologize, but I cannot provide a perspective at this moment.',
-        isUser: false,
-        timestamp: new Date(),
-      };
-
-      setMessages(prev => [...prev, perspectiveMessage]);
-    } catch (error) {
-      console.error('Error generating perspective:', error);
-    } finally {
-      setIsGeneratingPerspective(false);
-    }
-  };
 
   useEffect(() => {
     // Scroll to the top of the latest assistant message for better readability
@@ -221,9 +169,9 @@ export const Chat = () => {
       // Remove old system prompt - let backend handle mode-specific prompts
       const enhancedHistory: ChatHistoryMessage[] = historyPayload;
 
-      // Call OpenRouter via Supabase Edge Function with history, mode, and admin status
+      // Call OpenRouter via Supabase Edge Function with history, current mode, and admin status
       const { data, error } = await supabase.functions.invoke('chat-with-openrouter', {
-        body: { message: messageText, history: enhancedHistory, mode, isAdmin }
+        body: { message: messageText, history: enhancedHistory, mode: mode, isAdmin }
       });
 
       if (error) {
@@ -282,22 +230,14 @@ export const Chat = () => {
         <div className="flex items-center space-x-2">
           <Search className="w-4 h-4 text-muted-foreground hidden sm:block" />
           <button
-            onClick={() => {
-              const newMode = mode === 'insights' ? 'perspective' : 'insights';
-              setMode(newMode);
-              if (newMode === 'perspective') {
-                // Automatically generate perspective when switching to perspective mode
-                generatePerspectiveFromInsights();
-              }
-            }}
-            disabled={isGeneratingPerspective}
+            onClick={() => setMode(prev => prev === 'insights' ? 'perspective' : 'insights')}
             className={`text-sm md:text-base px-3 md:px-4 py-1.5 rounded-full border transition-colors mobile-touch-target ${
               mode === 'perspective'
                 ? 'bg-primary text-primary-foreground border-primary'
                 : 'bg-background text-muted-foreground border-border hover:bg-muted'
-            } ${isGeneratingPerspective ? 'opacity-50 cursor-not-allowed' : ''}`}
+            }`}
           >
-            {isGeneratingPerspective ? 'Generating...' : (mode === 'insights' ? 'Mode: Insights' : 'Mode: Perspective')}
+            {mode === 'insights' ? 'Mode: Insights' : 'Mode: Perspective'}
           </button>
 
           <Dialog open={showAdminDialog} onOpenChange={setShowAdminDialog}>
