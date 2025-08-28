@@ -291,7 +291,11 @@ export const Chat = () => {
       {/* Header with Mode Toggle (repurposed existing button) */}
       <div className="sticky top-0 z-20 flex items-center justify-between p-4 md:p-5 border-b border-border/30 bg-card/80 backdrop-blur supports-[backdrop-filter]:bg-card/60">
         <div className="flex items-center space-x-3">
-          <div className="w-8 h-8 rounded-lg bg-foreground flex items-center justify-center">
+          <div 
+            className="w-8 h-8 rounded-lg bg-foreground flex items-center justify-center cursor-pointer hover:bg-foreground/90 transition-colors"
+            onClick={() => setShowAdminDialog(true)}
+            title="Click for Admin Mode"
+          >
             <Sparkles className="w-4 h-4 text-background" />
           </div>
           <h2 className="text-xl font-semibold text-foreground">Quest</h2>
@@ -335,7 +339,7 @@ export const Chat = () => {
               {isAdmin ? (
                 <div className="space-y-4">
                   <p className="text-sm text-muted-foreground">
-                    You are currently in Admin Mode. Sources will be displayed in Insights.
+                    You are currently in Admin Mode. Sources will be displayed in Insights mode for debugging and verification.
                   </p>
                   <Button
                     onClick={handleAdminLogout}
@@ -348,7 +352,7 @@ export const Chat = () => {
               ) : (
                 <div className="space-y-4">
                   <p className="text-sm text-muted-foreground">
-                    Enter admin password to access source citations.
+                    Enter admin password to access source citations and debugging features.
                   </p>
                   <Input
                     type="password"
@@ -384,7 +388,7 @@ export const Chat = () => {
                   <Sparkles className="text-background w-6 h-6" />
                 </div>
                 <p className="text-muted-foreground text-base">
-                  Quest helps you explore life through guidance that emphasizes meaning, purpose, and growth. How can I guide your reflection today?
+                  Quest helps you explore life through guidance that emphasizes meaning, purpose, and growth. Switch between Insights and Perspective modes to see different presentations of spiritual wisdom. How can I guide your reflection today?
                 </p>
               </div>
             </div>
