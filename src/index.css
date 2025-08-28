@@ -194,6 +194,38 @@
     background-clip: text;
   }
 
+  /* Fix for text visibility and remove any overlays */
+  .prose {
+    position: relative;
+    z-index: 1;
+  }
+
+  .prose * {
+    position: relative;
+    z-index: 1;
+  }
+
+  /* Ensure chat messages are properly layered */
+  .chat-message {
+    position: relative;
+    z-index: 1;
+  }
+
+  /* Remove any decorative overlays that might interfere with text */
+  .chat-message::before,
+  .chat-message::after {
+    display: none !important;
+  }
+
+  /* Ensure proper text contrast and visibility */
+  .prose p,
+  .prose div,
+  .prose span {
+    color: inherit !important;
+    background: transparent !important;
+    text-shadow: none !important;
+  }
+
   .animate-wisdom-pulse {
     animation: wisdom-pulse 3s ease-in-out infinite;
   }

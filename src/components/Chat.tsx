@@ -409,7 +409,7 @@ export const Chat = () => {
                       {message.text}
                     </p>
                   ) : (
-                    <div className="prose prose-base dark:prose-invert max-w-none">
+                    <div className="prose prose-base dark:prose-invert max-w-none chat-message">
                       <ReactMarkdown remarkPlugins={[remarkGfm]}>
                         {message.text}
                       </ReactMarkdown>
