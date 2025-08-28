@@ -1,9 +1,8 @@
 import { useState, useRef, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Send, Sparkles, Search } from 'lucide-react';
-import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
@@ -67,7 +66,6 @@ export const Chat = () => {
   const [webSearchEnabled, setWebSearchEnabled] = useState(false);
   const [usedHiddenWordIds, setUsedHiddenWordIds] = useState<string[]>([]);
   const scrollAreaRef = useRef<HTMLDivElement>(null);
-  const { toast } = useToast();
 
   const scrollToBottom = () => {
     if (scrollAreaRef.current) {
@@ -137,10 +135,6 @@ export const Chat = () => {
       };
 
       setMessages(prev => [...prev, aiMessage]);
-
-      toast({
-        description: "Response received",
-      });
     } catch (error) {
       console.error('Error sending message:', error);
 
@@ -152,11 +146,6 @@ export const Chat = () => {
       };
 
       setMessages(prev => [...prev, aiMessage]);
-
-      toast({
-        description: "Connection error. Please try again.",
-        variant: "destructive",
-      });
     } finally {
       setIsLoading(false);
     }
@@ -173,21 +162,21 @@ export const Chat = () => {
   return (
     <div className="flex flex-col h-full">
       {/* Header with Web Search Toggle */}
-      <div className="sticky top-0 z-20 flex items-center justify-between p-4 md:p-5 border-b border-border/30 bg-card/80 backdrop-blur supports-[backdrop-filter]:bg-card/60">
+      <div className="sticky top-0 z-20 flex items-center justify-between p-4 border-b border-border bg-background">
         <div className="flex items-center space-x-3">
-          <div className="w-10 h-10 md:w-12 md:h-12 rounded-full bg-primary/10 flex items-center justify-center">
-            <Sparkles className="w-5 h-5 md:w-6 md:h-6 text-primary" />
+          <div className="w-8 h-8 rounded-lg bg-foreground flex items-center justify-center">
+            <Sparkles className="w-4 h-4 text-background" />
           </div>
-          <h2 className="text-xl md:text-2xl font-semibold text-foreground">Quest</h2>
+          <h2 className="text-xl font-semibold text-foreground">Quest</h2>
         </div>
         
         <div className="flex items-center space-x-2">
-          <Search className="w-5 h-5 text-muted-foreground hidden sm:block" />
+          <Search className="w-4 h-4 text-muted-foreground hidden sm:block" />
           <button
             onClick={() => setWebSearchEnabled(!webSearchEnabled)}
-            className={`text-sm md:text-base px-3 md:px-4 py-1.5 rounded-full border transition-colors mobile-touch-target ${
+            className={`text-sm px-3 py-1.5 rounded-lg border transition-colors mobile-touch-target ${
               webSearchEnabled 
-                ? 'bg-primary text-primary-foreground border-primary' 
+                ? 'bg-foreground text-background border-foreground' 
                 : 'bg-background text-muted-foreground border-border hover:bg-muted'
             }`}
           >
@@ -197,15 +186,15 @@ export const Chat = () => {
       </div>
 
       {/* Messages */}
-      <ScrollArea ref={scrollAreaRef} className="flex-1 px-3 sm:px-4 py-4 sm:py-6 ios-scroll android-text-size">
-        <div className="max-w-4xl mx-auto space-y-4 sm:space-y-6">
+      <ScrollArea ref={scrollAreaRef} className="flex-1 px-4 py-6 ios-scroll android-text-size">
+        <div className="max-w-4xl mx-auto space-y-6">
           {messages.length === 0 && (
             <div className="flex items-center justify-center h-full min-h-[300px]">
               <div className="text-center max-w-md">
-                <div className="w-12 h-12 mx-auto mb-4 bg-primary/10 rounded-full flex items-center justify-center">
-                  <Sparkles className="text-primary w-6 h-6" />
+                <div className="w-12 h-12 mx-auto mb-4 bg-foreground rounded-xl flex items-center justify-center">
+                  <Sparkles className="text-background w-6 h-6" />
                 </div>
-                <p className="text-muted-foreground text-lg md:text-xl">
+                <p className="text-muted-foreground text-base">
                   Quest helps you explore life through guidance that emphasizes meaning, purpose, and growth. How can I guide your reflection today?
                 </p>
               </div>
@@ -213,29 +202,29 @@ export const Chat = () => {
           )}
           
           {messages.map((message) => (
-            <div key={message.id} className="flex gap-3 sm:gap-4">
+            <div key={message.id} className="flex gap-4">
               {!message.isUser && (
-                <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
-                  <Sparkles className="w-4 h-4 sm:w-5 sm:h-5 text-primary" />
+                <div className="w-8 h-8 rounded-lg bg-foreground flex items-center justify-center flex-shrink-0">
+                  <Sparkles className="w-4 h-4 text-background" />
                 </div>
               )}
               
-              <div className={`flex-1 ${message.isUser ? 'ml-10 sm:ml-12' : ''}`}>
-                <div className={`${message.isUser ? 'bg-muted/50 p-3 sm:p-4 rounded-xl' : ''}`}>
+              <div className={`flex-1 ${message.isUser ? 'ml-12' : ''}`}>
+                <div className={`${message.isUser ? 'bg-muted p-4 rounded-lg' : ''}`}>
                   {message.isUser ? (
-                    <p className="text-lg leading-relaxed whitespace-pre-wrap font-sans">
+                    <p className="text-base leading-relaxed whitespace-pre-wrap">
                       {message.text}
                     </p>
                   ) : (
-                    <div className="prose prose-base sm:prose-lg dark:prose-invert max-w-none">
+                    <div className="prose prose-base dark:prose-invert max-w-none">
                       <ReactMarkdown remarkPlugins={[remarkGfm]}>
                         {message.text}
                       </ReactMarkdown>
                     </div>
                   )}
                   
-                  <div className="flex items-center justify-between mt-2 sm:mt-3">
-                    <span className="text-[11px] sm:text-xs text-muted-foreground">
+                  <div className="flex items-center justify-between mt-3">
+                    <span className="text-xs text-muted-foreground">
                       {message.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                     </span>
                   </div>
@@ -243,7 +232,7 @@ export const Chat = () => {
               </div>
               
               {message.isUser && (
-                <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-primary text-primary-foreground flex items-center justify-center flex-shrink-0 text-sm font-medium">
+                <div className="w-8 h-8 rounded-lg bg-foreground text-background flex items-center justify-center flex-shrink-0 text-sm font-medium">
                   You
                 </div>
               )}
@@ -252,16 +241,16 @@ export const Chat = () => {
           
           {isLoading && (
             <div className="flex gap-4">
-              <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
-                <Sparkles className="w-4 h-4 text-primary" />
+              <div className="w-8 h-8 rounded-lg bg-foreground flex items-center justify-center flex-shrink-0">
+                <Sparkles className="w-4 h-4 text-background" />
               </div>
               
               <div className="flex-1">
                 <div className="flex space-x-2 items-center py-3">
-                  <span className="text-lg mr-2 font-sans">Thinking...</span>
-                  <div className="w-2 h-2 bg-primary rounded-full animate-bounce"></div>
-                  <div className="w-2 h-2 bg-primary rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
-                  <div className="w-2 h-2 bg-primary rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
+                  <span className="text-base mr-2">Thinking...</span>
+                  <div className="w-2 h-2 bg-foreground rounded-full animate-bounce"></div>
+                  <div className="w-2 h-2 bg-foreground rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
+                  <div className="w-2 h-2 bg-foreground rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
                 </div>
               </div>
             </div>
@@ -270,34 +259,43 @@ export const Chat = () => {
       </ScrollArea>
 
       {/* Input */}
-      <div className="sticky bottom-0 z-20 border-t border-border/30 p-3 sm:p-4 bg-card/80 backdrop-blur supports-[backdrop-filter]:bg-card/60 mobile-safe-area">
+      <div className="sticky bottom-0 z-20 border-t border-border p-4 bg-background mobile-safe-area">
         <div className="max-w-4xl mx-auto">
           <div className="relative">
-            <Input
+            <Textarea
               value={inputValue}
               onChange={(e) => setInputValue(e.target.value)}
-              onKeyPress={handleKeyPress}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                  e.preventDefault();
+                  handleSendMessage();
+                }
+              }}
               placeholder="Message Quest..."
-              className="w-full h-14 md:h-16 pr-12 rounded-2xl bg-background border-border text-foreground placeholder:text-muted-foreground focus:border-ring focus:ring-1 focus:ring-ring text-lg md:text-xl resize-none"
+              className="w-full min-h-[52px] max-h-[200px] pr-14 py-3 px-4 rounded-lg bg-background border border-border text-foreground placeholder:text-muted-foreground focus:border-ring focus:ring-1 focus:ring-ring text-base resize-none"
               autoComplete="off"
               autoCorrect="off"
               autoCapitalize="sentences"
               spellCheck="true"
+              rows={1}
+              style={{
+                fieldSizing: 'content'
+              } as any}
             />
             
             <Button
               onClick={handleSendMessage}
               disabled={!inputValue.trim() || isLoading}
               size="icon"
-              className="absolute right-2 top-1/2 -translate-y-1/2 h-10 w-10 md:h-12 md:w-12 bg-primary text-primary-foreground hover:bg-primary/90 transition-all duration-200 rounded-xl mobile-touch-target"
+              className="absolute right-2 bottom-2 h-8 w-8 bg-foreground text-background hover:bg-foreground/90 transition-all duration-200 rounded-lg mobile-touch-target"
             >
-              <Send className="w-5 h-5 md:w-6 md:h-6" />
+              <Send className="w-4 h-4" />
             </Button>
           </div>
           
           {webSearchEnabled && (
-            <div className="mt-2 text-sm text-muted-foreground flex items-center gap-2">
-              <Search className="w-4 h-4" />
+            <div className="mt-2 text-xs text-muted-foreground flex items-center gap-2">
+              <Search className="w-3 h-3" />
               Web search enabled - responses will include current information
             </div>
           )}
