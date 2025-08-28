@@ -226,6 +226,27 @@
     text-shadow: none !important;
   }
 
+  /* Increase font size for Perspective mode content */
+  .chat-message .prose {
+    font-size: 1.1rem !important;
+    line-height: 1.7 !important;
+  }
+
+  .chat-message .prose p {
+    font-size: 1.1rem !important;
+    line-height: 1.7 !important;
+    margin-bottom: 1rem !important;
+  }
+
+  .chat-message .prose h1,
+  .chat-message .prose h2,
+  .chat-message .prose h3 {
+    font-size: 1.3rem !important;
+    line-height: 1.5 !important;
+    margin-top: 1.5rem !important;
+    margin-bottom: 1rem !important;
+  }
+
   .animate-wisdom-pulse {
     animation: wisdom-pulse 3s ease-in-out infinite;
   }
