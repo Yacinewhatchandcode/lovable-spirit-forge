@@ -298,7 +298,7 @@ export const Chat = () => {
           >
             <Sparkles className="w-4 h-4 text-background" />
           </div>
-          <h2 className="text-xl font-semibold text-foreground">Quest</h2>
+          <h2 className="text-2xl font-semibold text-foreground">Quest</h2>
         </div>
         
         <div className="flex items-center space-x-2">
@@ -310,7 +310,7 @@ export const Chat = () => {
               regenerateConversationForMode(newMode);
             }}
             disabled={isRegenerating}
-            className={`text-sm md:text-base px-3 md:px-4 py-1.5 rounded-full border transition-colors mobile-touch-target ${
+            className={`text-base md:text-lg px-4 md:px-5 py-2 rounded-full border transition-colors mobile-touch-target ${
               mode === 'perspective'
                 ? 'bg-primary text-primary-foreground border-primary'
                 : 'bg-background text-muted-foreground border-border hover:bg-muted'
@@ -387,7 +387,7 @@ export const Chat = () => {
                 <div className="w-12 h-12 mx-auto mb-4 bg-foreground rounded-xl flex items-center justify-center">
                   <Sparkles className="text-background w-6 h-6" />
                 </div>
-                <p className="text-muted-foreground text-base">
+                <p className="text-muted-foreground text-lg">
                   Quest helps you explore life through guidance that emphasizes meaning, purpose, and growth. Switch between Insights and Perspective modes to see different presentations of spiritual wisdom. How can I guide your reflection today?
                 </p>
               </div>
@@ -489,7 +489,7 @@ export const Chat = () => {
                 }
               }}
               placeholder="Message Quest..."
-              className="w-full min-h-[52px] max-h-[200px] pr-14 py-3 px-4 rounded-lg bg-background border border-border text-foreground placeholder:text-muted-foreground focus:border-ring focus:ring-1 focus:ring-ring text-base resize-none"
+              className="w-full min-h-[52px] max-h-[200px] pr-14 py-3 px-4 rounded-lg bg-background border border-border text-foreground placeholder:text-muted-foreground focus:border-ring focus:ring-1 focus:ring-ring text-lg resize-none"
               autoComplete="off"
               autoCorrect="off"
               autoCapitalize="sentences"

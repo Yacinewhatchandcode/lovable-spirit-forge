@@ -226,25 +226,48 @@
     text-shadow: none !important;
   }
 
-  /* Increase font size for Perspective mode content */
+  /* Increase font size for all content - more visual and readable */
   .chat-message .prose {
-    font-size: 1.1rem !important;
-    line-height: 1.7 !important;
+    font-size: 1.25rem !important;
+    line-height: 1.8 !important;
   }
 
   .chat-message .prose p {
-    font-size: 1.1rem !important;
-    line-height: 1.7 !important;
-    margin-bottom: 1rem !important;
+    font-size: 1.25rem !important;
+    line-height: 1.8 !important;
+    margin-bottom: 1.2rem !important;
   }
 
   .chat-message .prose h1,
   .chat-message .prose h2,
   .chat-message .prose h3 {
-    font-size: 1.3rem !important;
-    line-height: 1.5 !important;
-    margin-top: 1.5rem !important;
-    margin-bottom: 1rem !important;
+    font-size: 1.5rem !important;
+    line-height: 1.4 !important;
+    margin-top: 2rem !important;
+    margin-bottom: 1.2rem !important;
+    font-weight: 600 !important;
+  }
+
+  /* Make user messages larger too */
+  .chat-message p {
+    font-size: 1.2rem !important;
+    line-height: 1.6 !important;
+  }
+
+  /* Increase overall app font sizes */
+  body {
+    font-size: 1.1rem !important;
+  }
+
+  /* Make headers more prominent */
+  h1, h2, h3, h4, h5, h6 {
+    font-size: 1.4rem !important;
+    font-weight: 600 !important;
+  }
+
+  /* Increase button and input text sizes */
+  button, input, textarea {
+    font-size: 1.1rem !important;
   }
 
   .animate-wisdom-pulse {
