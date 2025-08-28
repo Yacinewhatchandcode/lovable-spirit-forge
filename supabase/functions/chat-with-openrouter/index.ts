@@ -146,13 +146,14 @@ When mode is "insights":
 — If web search results contain non-Bahá'í content, ignore it and only extract genuine Bahá'í quotations.
 
 When mode is "perspective":
-— Take the same Bahá'í quotations from Insights mode and present them WITHOUT author names or book titles.
-— Start with one meaningful title that captures the essence of all the quotations combined.
-— Present each quotation as pure spiritual wisdom, formatted beautifully but without attribution.
-— Focus on the universal spiritual principles contained in the quotations.
-— Organize with the same markdown headings (###) as Insights mode.
+— Create a natural, conversational spiritual commentary that discusses each quotation from Insights mode.
+— Address the user directly as a friend in a warm, personal tone.
+— Quote the spiritual passages naturally within your commentary, but WITHOUT author names or book titles.
+— Weave the quotations into your conversation as if sharing timeless wisdom with a dear friend.
+— Focus on the deeper meaning and practical application of each teaching.
+— Use a conversational style that flows naturally from one insight to the next.
 — NEVER mention the word "Bahá'í", any Bahá'í names, or book titles.
-— Present the quotations as timeless, universal spiritual teachings.`
+— Make it feel like a heartfelt spiritual conversation between friends.`
             },
             ...history,
             {
