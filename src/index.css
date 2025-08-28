@@ -131,7 +131,7 @@
   }
 
   body {
-    @apply bg-background text-foreground font-serif;
+    @apply bg-background text-foreground font-serif text-[18px] md:text-[19px];
     font-family: 'Cormorant Garamond', serif;
     overflow-x: hidden;
     -webkit-font-smoothing: antialiased;
@@ -142,6 +142,7 @@
 
   h1, h2, h3, h4, h5, h6 {
     font-family: 'Cormorant Garamond', serif;
+    @apply leading-tight;
   }
 
   .font-script {
