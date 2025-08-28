@@ -51,8 +51,72 @@ serve(async (req) => {
     }
 
 
+    // Web search for Bahá'í quotations in insights mode
+    let searchResults = '';
+    if (mode === 'insights') {
+      try {
+        // Try multiple search strategies for better results
+        const searchStrategies = [
+          `site:bahai.org "${message}" quotations`,
+          `Bahá'í Faith "${message}" teachings writings`,
+          `"Bahá'u'lláh" "${message}" quotations`,
+          `Bahá'í principles "${message}" guidance`
+        ];
+
+        let combinedResults = [];
+
+        for (const strategy of searchStrategies) {
+          try {
+            const searchResponse = await fetch(
+              `https://html.duckduckgo.com/html/?q=${encodeURIComponent(strategy)}`,
+              {
+                method: 'GET',
+                headers: {
+                  'User-Agent': 'Mozilla/5.0 (compatible; BahaiSearchBot/1.0)'
+                },
+                signal: controller.signal,
+              }
+            );
+
+            if (searchResponse.ok) {
+              const html = await searchResponse.text();
+              // Extract relevant text snippets from HTML (simplified parsing)
+              const snippets = html.match(/<a[^>]*class="result__snippet"[^>]*>([^<]*)<\/a>/g) || [];
+              const textSnippets = snippets.map(s => s.replace(/<[^>]*>/g, '')).filter(s => s.length > 20);
+
+              if (textSnippets.length > 0) {
+                combinedResults.push(...textSnippets.slice(0, 2));
+              }
+            }
+          } catch (strategyError) {
+            console.log(`Search strategy failed: ${strategy}`);
+          }
+        }
+
+        if (combinedResults.length > 0) {
+          searchResults = `Web search results for "${message}":\n${combinedResults.slice(0, 5).map((result, i) => `${i + 1}. ${result}`).join('\n')}`;
+        } else {
+          // Fallback to general search
+          const fallbackResponse = await fetch(`https://api.duckduckgo.com/?q=${encodeURIComponent(`Bahá'í Faith ${message}`)}&format=json&no_html=1`, {
+            signal: controller.signal,
+          });
+
+          if (fallbackResponse.ok) {
+            const fallbackData = await fallbackResponse.json();
+            if (fallbackData.AbstractText) {
+              searchResults = `General search results for "${message}": ${fallbackData.AbstractText}`;
+            }
+          }
+        }
+
+        console.log('Search results compiled:', searchResults ? 'Found results' : 'No results found');
+      } catch (searchError) {
+        console.log('Web search failed, continuing without search results:', searchError.message);
+      }
+    }
+
     const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 20000);
+    const timeoutId = setTimeout(() => controller.abort(), 25000); // Increased timeout for search
 
     let response: Response;
     try {
@@ -69,22 +133,30 @@ serve(async (req) => {
           messages: [
             {
               role: 'system',
-              content: `You are a spiritual guide. Follow these rules:
+              content: `You are a spiritual guide specializing in Bahá'í Faith teachings. Follow these rules:
 — Keep language simple, kind, easy to understand.
 — If the question cannot be answered from the Writings, respond with: There is no direct statement in the Writings on this matter.
 ${isAdmin ? '— Include source citations in square brackets [Source: Book Name, Page/Paragraph]' : '— Do not include citations, names, or sources in user-facing text. Do not use the word Bahá\'í anywhere.'}
 
 When mode is "insights":
+— Extract and present authentic Bahá'í quotations from the provided web search results.
 — Return only passages from the Writings, at least two per topic, organized with markdown headings (###).
 — Wrap every word from the Writings in bold markdown.
+— Focus on finding genuine Bahá'í quotations about the user's query.
+— If no relevant quotations are found in search results, search your knowledge for appropriate passages.
 ${isAdmin ? '— Include source citation in square brackets after each passage.' : '— Add one short literary line per topic wrapped in italics.'}
 
 When mode is "perspective":
-— Produce a short synthesis in clear sections using only the most recent Insights content in the conversation. Do not include quotations or sources.
-— If there is no prior Insights content in history, first infer the necessary Insights silently and then produce the synthesis.`
+— Produce a short synthesis in clear sections using only the most recent Insights content in the conversation.
+— Weave together the quotations from Insights into a coherent spiritual guidance.
+— Do not include quotations or sources in the synthesis - only the wisdom and teachings.
+— Focus on practical application and understanding of the spiritual principles.`
             },
             ...history,
-            { role: 'user', content: `Mode: ${mode}. Admin: ${isAdmin}. User message: ${message}` }
+            {
+              role: 'user',
+              content: `Mode: ${mode}. Admin: ${isAdmin}. User message: ${message}${searchResults ? '\n\nWeb Search Results:\n' + searchResults : ''}`
+            }
           ],
           max_tokens: 1000,
         }),
