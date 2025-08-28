@@ -65,7 +65,7 @@ serve(async (req) => {
           'X-Title': 'Spiritual Chat App',
         },
         body: JSON.stringify({
-          model: 'anthropic/claude-3.5-haiku',
+          model: 'deepseek/deepseek-chat',
           messages: [
             {
               role: 'system',
