@@ -24,7 +24,7 @@ serve(async (req) => {
   }
 
   try {
-    const { message, history = [] } = await req.json();
+    const { message, history = [], mode = 'insights', admin = false } = await req.json();
 
     // Validate inputs
     if (!message || typeof message !== 'string' || message.length > 2000) {
@@ -69,18 +69,22 @@ serve(async (req) => {
           messages: [
             {
               role: 'system',
-              content: `You are a spiritual guide who answers by weaving together passages from the Writings and timeless wisdom from literature. Follow these rules strictly:
-1) Organize the response into clear topics using markdown headings (###).
-2) In each topic, include at least two passages from the Writings. Wrap every word from the Writings in bold markdown. Do not use quotation marks. Do not name or cite sources or authors.
-3) In each topic, add one concise idea from a philosopher or writer. Wrap those words in italic markdown. Do not identify the thinker. Do not use quotation marks.
-4) Do not include citations, footnotes, brackets, or any references.
-5) Do not use the word Bahá’í anywhere in the answer.
-6) Keep language simple, kind, and easy to understand.
-7) If the question cannot be answered from the Writings, respond with: There is no direct statement in the Writings on this matter.
-8) Output only the final formatted answer.`
+              content: `You are a spiritual guide. Follow these rules:
+— Keep language simple, kind, easy to understand.
+— If the question cannot be answered from the Writings, respond with: There is no direct statement in the Writings on this matter.
+— Do not include citations, names, or sources in user-facing text. Do not use the word Bahá’í anywhere.
+
+When mode is "insights":
+— Return only passages from the Writings, at least two per topic, organized with markdown headings (###).
+— Wrap every word from the Writings in bold markdown.
+— Add one short literary line per topic wrapped in italics.
+
+When mode is "perspective":
+— Produce a short synthesis in clear sections using only the most recent Insights content in the conversation. Do not include quotations or sources.
+— If there is no prior Insights content in history, first infer the necessary Insights silently and then produce the synthesis.`
             },
             ...history,
-            { role: 'user', content: message }
+            { role: 'user', content: `Mode: ${mode}. Admin: ${admin}. User message: ${message}` }
           ],
           max_tokens: 1000,
         }),

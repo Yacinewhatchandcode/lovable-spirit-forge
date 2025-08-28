@@ -63,7 +63,7 @@ export const Chat = () => {
   ]);
   const [inputValue, setInputValue] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [webSearchEnabled, setWebSearchEnabled] = useState(false);
+  const [mode, setMode] = useState<'insights' | 'perspective'>('insights');
   const [usedHiddenWordIds, setUsedHiddenWordIds] = useState<string[]>([]);
   const scrollAreaRef = useRef<HTMLDivElement>(null);
 
@@ -77,7 +77,14 @@ export const Chat = () => {
   };
 
   useEffect(() => {
-    scrollToBottom();
+    // Scroll to the top of the latest assistant message for better readability
+    const lastAssistant = [...messages].reverse().find(m => !m.isUser);
+    if (lastAssistant) {
+      const el = document.getElementById(`msg-${lastAssistant.id}`);
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }
   }, [messages]);
 
   const handleSendMessage = async () => {
@@ -112,9 +119,9 @@ export const Chat = () => {
 
       const enhancedHistory: ChatHistoryMessage[] = [systemInstructions, ...historyPayload];
 
-      // Call OpenRouter via Supabase Edge Function with history
+      // Call OpenRouter via Supabase Edge Function with history and mode
       const { data, error } = await supabase.functions.invoke('chat-with-openrouter', {
-        body: { message: messageText, history: enhancedHistory }
+        body: { message: messageText, history: enhancedHistory, mode }
       });
 
       if (error) {
@@ -161,8 +168,8 @@ export const Chat = () => {
 
   return (
     <div className="flex flex-col h-full">
-      {/* Header with Web Search Toggle */}
-      <div className="sticky top-0 z-20 flex items-center justify-between p-4 border-b border-border bg-background">
+      {/* Header with Mode Toggle (repurposed existing button) */}
+      <div className="sticky top-0 z-20 flex items-center justify-between p-4 md:p-5 border-b border-border/30 bg-card/80 backdrop-blur supports-[backdrop-filter]:bg-card/60">
         <div className="flex items-center space-x-3">
           <div className="w-8 h-8 rounded-lg bg-foreground flex items-center justify-center">
             <Sparkles className="w-4 h-4 text-background" />
@@ -173,14 +180,14 @@ export const Chat = () => {
         <div className="flex items-center space-x-2">
           <Search className="w-4 h-4 text-muted-foreground hidden sm:block" />
           <button
-            onClick={() => setWebSearchEnabled(!webSearchEnabled)}
-            className={`text-sm px-3 py-1.5 rounded-lg border transition-colors mobile-touch-target ${
-              webSearchEnabled 
-                ? 'bg-foreground text-background border-foreground' 
+            onClick={() => setMode(prev => prev === 'insights' ? 'perspective' : 'insights')}
+            className={`text-sm md:text-base px-3 md:px-4 py-1.5 rounded-full border transition-colors mobile-touch-target ${
+              mode === 'perspective' 
+                ? 'bg-primary text-primary-foreground border-primary' 
                 : 'bg-background text-muted-foreground border-border hover:bg-muted'
             }`}
           >
-            Web search
+            {mode === 'insights' ? 'Mode: Insights' : 'Mode: Perspective'}
           </button>
         </div>
       </div>
@@ -202,7 +209,7 @@ export const Chat = () => {
           )}
           
           {messages.map((message) => (
-            <div key={message.id} className="flex gap-4">
+            <div id={`msg-${message.id}`} key={message.id} className="flex gap-3 sm:gap-4">
               {!message.isUser && (
                 <div className="w-8 h-8 rounded-lg bg-foreground flex items-center justify-center flex-shrink-0">
                   <Sparkles className="w-4 h-4 text-background" />
@@ -293,10 +300,11 @@ export const Chat = () => {
             </Button>
           </div>
           
-          {webSearchEnabled && (
-            <div className="mt-2 text-xs text-muted-foreground flex items-center gap-2">
-              <Search className="w-3 h-3" />
-              Web search enabled - responses will include current information
+<<<<<<< HEAD
+          {mode === 'perspective' && (
+            <div className="mt-2 text-sm text-muted-foreground flex items-center gap-2">
+              <Search className="w-4 h-4" />
+              Mode: Perspective
             </div>
           )}
         </div>
