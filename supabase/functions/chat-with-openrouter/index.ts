@@ -55,12 +55,14 @@ serve(async (req) => {
     let searchResults = '';
     if (mode === 'insights') {
       try {
-        // Try multiple search strategies for better results
+        // Try multiple search strategies for genuine Bahá'í quotations
         const searchStrategies = [
-          `site:bahai.org "${message}" quotations`,
-          `Bahá'í Faith "${message}" teachings writings`,
-          `"Bahá'u'lláh" "${message}" quotations`,
-          `Bahá'í principles "${message}" guidance`
+          `site:bahai.org "${message}" "Bahá'u'lláh" quotations`,
+          `site:bahai.org "${message}" "'Abdu'l-Bahá" teachings`,
+          `"Bahá'u'lláh" "${message}" Gleanings Hidden Words`,
+          `"Abdu'l-Bahá" "${message}" Paris Talks Promulgation`,
+          `Bahá'í Faith "${message}" Tablets Divine Plan`,
+          `Bahá'u'lláh "${message}" Kitáb-i-Aqdas Iqán`
         ];
 
         let combinedResults = [];
@@ -133,24 +135,24 @@ serve(async (req) => {
           messages: [
             {
               role: 'system',
-              content: `You are a spiritual guide specializing in Bahá'í Faith teachings. Follow these rules:
-— Keep language simple, kind, easy to understand.
-— If the question cannot be answered from the Writings, respond with: There is no direct statement in the Writings on this matter.
-${isAdmin ? '— Include source citations in square brackets [Source: Book Name, Page/Paragraph]' : '— Do not include citations, names, or sources in user-facing text. Do not use the word Bahá\'í anywhere.'}
+              content: `You are a spiritual guide. Follow these rules strictly:
 
 When mode is "insights":
-— Extract and present authentic Bahá'í quotations from the provided web search results.
-— Return only passages from the Writings, at least two per topic, organized with markdown headings (###).
-— Wrap every word from the Writings in bold markdown.
-— Focus on finding genuine Bahá'í quotations about the user's query.
-— If no relevant quotations are found in search results, search your knowledge for appropriate passages.
-${isAdmin ? '— Include source citation in square brackets after each passage.' : '— Add one short literary line per topic wrapped in italics.'}
+— ONLY return authentic Bahá'í quotations with full attribution.
+— Include the name of the author (like Bahá'u'lláh, 'Abdu'l-Bahá, Shoghi Effendi) and the book/source.
+— Format each quotation with: **"Quotation text"** - Author Name, Book Name
+— Present multiple quotations per topic, organized with markdown headings (###).
+— Focus exclusively on finding and presenting Bahá'í quotations about the user's query.
+— If web search results contain non-Bahá'í content, ignore it and only extract genuine Bahá'í quotations.
 
 When mode is "perspective":
-— Produce a short synthesis in clear sections using only the most recent Insights content in the conversation.
-— Weave together the quotations from Insights into a coherent spiritual guidance.
-— Do not include quotations or sources in the synthesis - only the wisdom and teachings.
-— Focus on practical application and understanding of the spiritual principles.`
+— Provide intelligent spiritual guidance based on the Bahá'í quotations from Insights mode.
+— NEVER mention the word "Bahá'í", any Bahá'í names, or book titles.
+— Synthesize the wisdom from the quotations into practical, universal spiritual principles.
+— Focus on the deeper meaning and practical application of the teachings.
+— Present your synthesis as timeless spiritual wisdom without attribution.
+— Use clear sections with markdown headings to organize your guidance.
+— Draw connections between different quotations to create a coherent spiritual framework.`
             },
             ...history,
             {
