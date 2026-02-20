@@ -9,3 +9,14 @@ transcripts/
 # macOS
 .DS_Store
 node_modules
+
+# Security - never commit secrets
+.env
+.env.local
+.env.production
+.env.development
+*.pem
+*.key
+id_rsa
+id_ed25519
+credentials.json

@@ -75,7 +75,8 @@ export const Chat = () => {
   const [isRegenerating, setIsRegenerating] = useState(false);
 
 
-  const ADMIN_PASSWORD = 'spiritguide2024'; // Hardcoded password
+  // ⚠️ Set VITE_ADMIN_PASSWORD in .env — never hardcode passwords
+  const ADMIN_PASSWORD = import.meta.env.VITE_ADMIN_PASSWORD || '';
 
   const scrollToBottom = () => {
     if (scrollAreaRef.current) {
@@ -291,7 +292,7 @@ export const Chat = () => {
       {/* Header with Mode Toggle (repurposed existing button) */}
       <div className="sticky top-0 z-20 flex items-center justify-between p-4 md:p-5 border-b border-border/30 bg-card/80 backdrop-blur supports-[backdrop-filter]:bg-card/60">
         <div className="flex items-center space-x-3">
-          <div 
+          <div
             className="w-8 h-8 rounded-lg bg-foreground flex items-center justify-center cursor-pointer hover:bg-foreground/90 transition-colors"
             onClick={() => setShowAdminDialog(true)}
             title="Click for Admin Mode"
@@ -300,7 +301,7 @@ export const Chat = () => {
           </div>
           <h2 className="text-2xl font-semibold text-foreground">Quest</h2>
         </div>
-        
+
         <div className="flex items-center space-x-2">
           <Search className="w-4 h-4 text-muted-foreground hidden sm:block" />
           <button
@@ -310,11 +311,10 @@ export const Chat = () => {
               regenerateConversationForMode(newMode);
             }}
             disabled={isRegenerating}
-            className={`text-base md:text-lg px-4 md:px-5 py-2 rounded-full border transition-colors mobile-touch-target ${
-              mode === 'perspective'
+            className={`text-base md:text-lg px-4 md:px-5 py-2 rounded-full border transition-colors mobile-touch-target ${mode === 'perspective'
                 ? 'bg-primary text-primary-foreground border-primary'
                 : 'bg-background text-muted-foreground border-border hover:bg-muted'
-            } ${isRegenerating ? 'opacity-50 cursor-not-allowed' : ''}`}
+              } ${isRegenerating ? 'opacity-50 cursor-not-allowed' : ''}`}
           >
             {isRegenerating ? 'Regenerating...' : (mode === 'insights' ? 'Mode: Insights' : 'Mode: Perspective')}
           </button>
@@ -393,7 +393,7 @@ export const Chat = () => {
               </div>
             </div>
           )}
-          
+
           {messages.map((message) => (
             <div id={`msg-${message.id}`} key={message.id} className="flex gap-3 sm:gap-4">
               {!message.isUser && (
@@ -401,7 +401,7 @@ export const Chat = () => {
                   <Sparkles className="w-4 h-4 text-background" />
                 </div>
               )}
-              
+
               <div className={`flex-1 ${message.isUser ? 'ml-12' : ''}`}>
                 <div className={`${message.isUser ? 'bg-muted p-4 rounded-lg' : ''}`}>
                   {message.isUser ? (
@@ -415,7 +415,7 @@ export const Chat = () => {
                       </ReactMarkdown>
                     </div>
                   )}
-                  
+
                   <div className="flex items-center justify-between mt-3">
                     <span className="text-xs text-muted-foreground">
                       {message.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
@@ -436,7 +436,7 @@ export const Chat = () => {
                   </div>
                 </div>
               </div>
-              
+
               {message.isUser && (
                 <div className="w-8 h-8 rounded-lg bg-foreground text-background flex items-center justify-center flex-shrink-0 text-sm font-medium">
                   You
@@ -444,13 +444,13 @@ export const Chat = () => {
               )}
             </div>
           ))}
-          
+
           {isLoading && (
             <div className="flex gap-4">
               <div className="w-8 h-8 rounded-lg bg-foreground flex items-center justify-center flex-shrink-0">
                 <Sparkles className="w-4 h-4 text-background" />
               </div>
-              
+
               <div className="flex-1">
                 <div className="flex space-x-2 items-center py-3">
                   <span className="text-base mr-2">Thinking...</span>
@@ -499,7 +499,7 @@ export const Chat = () => {
                 fieldSizing: 'content'
               } as any}
             />
-            
+
             <Button
               onClick={handleSendMessage}
               disabled={!inputValue.trim() || isLoading}

@@ -4,6 +4,17 @@ A React-based spiritual guidance application featuring The Hidden Words of Bahá
 
 ## Project info
 
+<div align="center">
+
+https://github.com/user-attachments/assets/demo.mp4
+
+**▶️ Watch the Demo**
+
+</div>
+
+---
+
+
 **URL**: https://lovable.dev/projects/bd921d37-7172-4e1a-9a17-14db2172a67f
 
 ## Ubuntu EC2 Server Deployment (Recommended)
@@ -120,7 +131,7 @@ server {
     server_name your-domain.com;
 
     location / {
-        proxy_pass http://localhost:3000;
+        proxy_pass http://localhost:PORT;
         proxy_http_version 1.1;
         proxy_set_header Upgrade $http_upgrade;
         proxy_set_header Connection 'upgrade';
